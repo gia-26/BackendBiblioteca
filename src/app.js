@@ -10,6 +10,7 @@ import catalogoRoutes from './routes/catalogo.routes.js';
 import librosRoutes from './routes/libros.routes.js';
 import historialMultasRoutes from './routes/multas.routes.js';
 import reportesRoutes from './routes/reportes.routes.js';
+import historialPrestamosRoutes from './routes/usuarios.routes.js';
 //import loginRoutes from './routes/login.routes.js';
 
 //Creamos el objeto de express para nuestra aplicación
@@ -36,6 +37,7 @@ app.use('/api/reportes', reportesRoutes);
 //app.use('/api/login', loginRoutes);
 app.use('/api/catalogo', catalogoRoutes);
 app.use('/api/libros', librosRoutes);
+app.use('/api/historialPrestamos', historialPrestamosRoutes);
 
 app.get('/',(req, res)=>{
     res.send("Esto es mi primer API desde express... publicada en vercel...");
