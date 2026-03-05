@@ -34,3 +34,7 @@ export const getAllMultas = async () => {
     `);
     return rows;
 }
+
+export const generarMultas = async () => {
+    await db.query(`CALL sp_generar_multas()`);
+}
