@@ -37,6 +37,11 @@ app.use('/api/reportes', reportesRoutes);
 app.use('/api/catalogo', catalogoRoutes);
 app.use('/api/libros', librosRoutes);
 
-app.listen(port, () => {
-    console.log(`Aplicación corriendo en el puerto ${port}`);
-});
+app.get('/',(req, res)=>{
+    res.send("Esto es mi primer API desde express... publicada en vercel...");
+})
+
+
+app.listen(port,()=>{
+    console.log("Prueva el API desde localhost:"+port)
+})
