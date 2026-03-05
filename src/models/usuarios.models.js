@@ -55,3 +55,44 @@ export const getResumenMultas = async (idUsuario) => {
 
   return rows[0];
 };
+
+// historial de prestamos
+
+export const getEstadisticasUsuario = async (idUsuario) => {
+  const [[totales]] = await db.query(`
+    SELECT COUNT(*) AS prestamosTotales
+    FROM tbl_prestamos
+    WHERE Id_usuario = ?
+  `, [idUsuario]);
+
+  const [[activos]] = await db.query(`
+    SELECT COUNT(*) AS librosActivos
+    FROM tbl_prestamos
+    WHERE Id_usuario = ?
+      AND Id_estado_prestamo = 'EP001'
+  `, [idUsuario]);
+
+  const [[devueltos]] = await db.query(`
+    SELECT COUNT(*) AS librosDevueltos
+    FROM tbl_prestamos
+    WHERE Id_usuario = ?
+      AND Id_estado_prestamo = 'EP002'
+  `, [idUsuario]);
+
+  return {
+    prestamosTotales: totales.prestamosTotales,
+    librosActivos: activos.librosActivos,
+    librosDevueltos: devueltos.librosDevueltos
+  };
+};
+
+export const getPrestamosUsuario = async (idUsuario) => {
+  const [rows] = await db.query(`
+    SELECT p.*, l.Titulo 
+    FROM tbl_prestamos p
+    INNER JOIN tbl_ejemplares e ON p.Id_ejemplar = e.Id_ejemplar
+    INNER JOIN tbl_libros l ON e.Id_libro = l.Id_libro
+    WHERE p.Id_usuario = ?
+  `, [idUsuario]);
+  return rows;
+};

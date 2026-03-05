@@ -54,3 +54,25 @@ export const getResumenMultas = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// historial de prestamos
+
+export const getEstadisticasUsuario = async (req, res) => {
+  try {
+    const idUsuario = req.usuario?.id || 'ALU001'; // Ajustar según tu auth
+    const data = await prestamosModel.getEstadisticasUsuario(idUsuario);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getPrestamosUsuario = async (req, res) => {
+  try {
+    const idUsuario = req.usuario?.id || 'ALU001';
+    const prestamos = await prestamosModel.getPrestamosUsuario(idUsuario);
+    res.status(200).json(prestamos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
