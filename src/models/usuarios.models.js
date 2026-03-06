@@ -42,16 +42,13 @@ export const getMultasByUsuario = async (idUsuario) => {
 };
 
 // Obtener resumen
-export const getResumenMultas = async (idUsuario) => {
+export const getResumenMultas = async () => {
 
   const [rows] = await db.query(`
     SELECT 
-      IFNULL(SUM(Monto), 0) AS MontoTotal
-    FROM tbl_multas m
-    INNER JOIN tbl_prestamos pres 
-      ON m.Id_prestamo = pres.Id_prestamo
-    WHERE pres.Id_usuario = ?
-  `, [idUsuario]);
+      IFNULL(SUM(Monto),0) AS MontoTotal
+    FROM tbl_multas
+  `);
 
   return rows[0];
 };

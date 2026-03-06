@@ -44,9 +44,7 @@ export const getMultasByUsuario = async (req, res) => {
 export const getResumenMultas = async (req, res) => {
   try {
 
-    const idUsuario = req.usuario?.id || 'ALU001';
-
-    const resumen = await usuariosModels.getResumenMultas(idUsuario);
+    const resumen = await usuariosModels.getResumenMultas();
 
     res.status(200).json(resumen);
 
