@@ -87,15 +87,12 @@ export const generarPDF = async (req, res) => {
     const pageWidth = doc.page.width;
     const pageHeight = doc.page.height;
 
-    // MEDIDAS GENERALES
-    const topLineY = 22;
-    const footerLineY = pageHeight - 60;
+    const topLineY = 38;
+    const footerLineY = pageHeight - 38;
 
-    // MÁS ESPACIO ARRIBA DEL TÍTULO
-    const titleY = 42;
-    const subtitleY = 63;
+    const titleY = 48;
+    const subtitleY = 72;
 
-    // TABLA MÁS PAREJA COMO TU MODELO
     const tableX = 15;
     const tableY = 102;
 
@@ -103,9 +100,9 @@ export const generarPDF = async (req, res) => {
     const rowHeight = 18;
     const totalHeight = 18;
 
-    // ANCHOS AJUSTADOS PARA QUE QUEDE PAREJA
-    const colWidths = [60, 72, 72, 112, 58, 58, 52, 48];
-    const tableWidth = colWidths.reduce((a, b) => a + b, 0);
+    // Ajuste más parecido a tu captura
+    const colWidths = [63, 70, 72, 120, 62, 62, 50, 48];
+    const tableWidth = colWidths.reduce((sum, w) => sum + w, 0);
 
     const headers = [
       'Usuario',
@@ -172,7 +169,7 @@ export const generarPDF = async (req, res) => {
       const {
         bold = false,
         align = 'left',
-        fontSize = 5.2,
+        fontSize = 5.1,
         paddingX = 2,
         paddingY = 5
       } = options;
@@ -195,7 +192,7 @@ export const generarPDF = async (req, res) => {
         drawTextInCell(headers[i], currentX, y, colWidths[i], headerHeight, {
           bold: true,
           align: 'center',
-          fontSize: 5.1,
+          fontSize: 5.0,
           paddingX: 1,
           paddingY: 5
         });
@@ -216,7 +213,7 @@ export const generarPDF = async (req, res) => {
         drawTextInCell(values[i], currentX, y, colWidths[i], rowHeight, {
           bold: false,
           align,
-          fontSize: 5.0,
+          fontSize: 4.9,
           paddingX: 2,
           paddingY: 5
         });
@@ -226,7 +223,7 @@ export const generarPDF = async (req, res) => {
     };
 
     const drawTotalRow = (x, y, total) => {
-      const firstPartWidth =
+      const widthBeforeTotal =
         colWidths[0] +
         colWidths[1] +
         colWidths[2] +
@@ -234,44 +231,34 @@ export const generarPDF = async (req, res) => {
         colWidths[4] +
         colWidths[5];
 
-      drawRect(x, y, firstPartWidth, totalHeight, '#d9d9d9');
-      drawRect(x + firstPartWidth, y, colWidths[6], totalHeight, '#d9d9d9');
-      drawRect(x + firstPartWidth + colWidths[6], y, colWidths[7], totalHeight, '#d9d9d9');
+      drawRect(x, y, widthBeforeTotal, totalHeight, '#d9d9d9');
+      drawRect(x + widthBeforeTotal, y, colWidths[6], totalHeight, '#d9d9d9');
+      drawRect(x + widthBeforeTotal + colWidths[6], y, colWidths[7], totalHeight, '#d9d9d9');
 
-      drawTextInCell('TOTAL:', x + firstPartWidth, y, colWidths[6], totalHeight, {
+      drawTextInCell('TOTAL:', x + widthBeforeTotal, y, colWidths[6], totalHeight, {
         bold: true,
         align: 'right',
-        fontSize: 5.6,
+        fontSize: 5.4,
         paddingX: 3,
         paddingY: 5
       });
 
-      drawTextInCell(`$${Number(total).toFixed(2)}`, x + firstPartWidth + colWidths[6], y, colWidths[7], totalHeight, {
+      drawTextInCell(`$${Number(total).toFixed(2)}`, x + widthBeforeTotal + colWidths[6], y, colWidths[7], totalHeight, {
         bold: true,
         align: 'right',
-        fontSize: 5.6,
+        fontSize: 5.4,
         paddingX: 3,
         paddingY: 5
       });
     };
 
-    const drawFooter = (pageNumber, totalPages, showCenterText = false) => {
+    const drawFooterLineAndNumber = (pageNumber, totalPages) => {
       doc
         .lineWidth(0.8)
         .strokeColor('black')
         .moveTo(15, footerLineY)
         .lineTo(pageWidth - 15, footerLineY)
         .stroke();
-
-      if (showCenterText) {
-        doc
-          .font('Helvetica')
-          .fontSize(5.2)
-          .fillColor('black')
-          .text(`Página ${pageNumber}/${totalPages}`, 0, footerLineY + 14, {
-            align: 'center'
-          });
-      }
 
       doc
         .font('Helvetica')
@@ -280,7 +267,17 @@ export const generarPDF = async (req, res) => {
         .text(`${pageNumber} / ${totalPages}`, pageWidth - 42, footerLineY + 8);
     };
 
-    // DATOS
+    const drawSecondPageTopLabel = (pageNumber, totalPages) => {
+      doc
+        .font('Helvetica')
+        .fontSize(5.2)
+        .fillColor('black')
+        .text(`Página ${pageNumber}/${totalPages}`, 0, 205, { align: 'center' });
+    };
+
+    // ===== DATOS =====
+    drawTopHeader();
+
     if (tipo === 'multas') {
       let total = 0;
 
@@ -299,7 +296,6 @@ export const generarPDF = async (req, res) => {
         ];
       });
 
-      drawTopHeader();
       drawHeaderRow(tableX, tableY);
 
       let currentY = tableY + headerHeight;
@@ -312,32 +308,75 @@ export const generarPDF = async (req, res) => {
       drawTotalRow(tableX, currentY, total);
 
     } else {
-      // SI LUEGO QUIERES, AQUÍ TE ADAPTO PRÉSTAMOS EXACTAMENTE IGUAL
-      drawTopHeader();
-      drawHeaderRow(tableX, tableY);
+      const headersPrestamos = [
+        'ID',
+        'Nombre',
+        'Apellido Paterno',
+        'Apellido Materno',
+        'ID Libro',
+        'Título',
+        'Fecha Préstamo',
+        'Fecha Devolución',
+        'Entrega'
+      ];
+
+      const colWidthsPrestamos = [35, 65, 75, 75, 45, 120, 60, 60, 60];
+
+      const drawHeaderRowPrestamos = (x, y) => {
+        let currentX = x;
+        for (let i = 0; i < headersPrestamos.length; i++) {
+          drawRect(currentX, y, colWidthsPrestamos[i], headerHeight, '#d9d9d9');
+          drawTextInCell(headersPrestamos[i], currentX, y, colWidthsPrestamos[i], headerHeight, {
+            bold: true,
+            align: 'center',
+            fontSize: 5.0,
+            paddingX: 1,
+            paddingY: 5
+          });
+          currentX += colWidthsPrestamos[i];
+        }
+      };
+
+      const drawRowPrestamos = (x, y, values) => {
+        let currentX = x;
+        for (let i = 0; i < values.length; i++) {
+          drawRect(currentX, y, colWidthsPrestamos[i], rowHeight, null);
+
+          let align = 'left';
+          if (i === 0 || i === 4 || i >= 6) align = 'center';
+
+          drawTextInCell(values[i], currentX, y, colWidthsPrestamos[i], rowHeight, {
+            bold: false,
+            align,
+            fontSize: 4.9,
+            paddingX: 2,
+            paddingY: 5
+          });
+          currentX += colWidthsPrestamos[i];
+        }
+      };
+
+      drawHeaderRowPrestamos(tableX, tableY);
 
       let currentY = tableY + headerHeight;
 
-      const rows = data.map(row => [
-        row.Nombre || '',
-        row.Apellido_P || '',
-        row.Apellido_M || '',
-        row.Titulo || '',
-        formatDate(row.Fecha_devolucion),
-        formatDate(row.Fecha_devolucion_real),
-        '',
-        ''
-      ]);
-
-      for (const rowValues of rows) {
-        drawRow(tableX, currentY, rowValues);
+      for (const row of data) {
+        drawRowPrestamos(tableX, currentY, [
+          row.Id || '',
+          row.Nombre || '',
+          row.Apellido_P || '',
+          row.Apellido_M || '',
+          row.Id_libro || '',
+          row.Titulo || '',
+          formatDate(row.Fecha_prestamo),
+          formatDate(row.Fecha_devolucion),
+          formatDate(row.Fecha_devolucion_real) || 'Pendiente'
+        ]);
         currentY += rowHeight;
       }
-
-      drawTotalRow(tableX, currentY, 0);
     }
 
-    // SEGUNDA HOJA FIJA
+    // ===== SEGUNDA HOJA FIJA =====
     doc.addPage({
       margin: 0,
       size: 'A4',
@@ -351,17 +390,16 @@ export const generarPDF = async (req, res) => {
       .lineTo(pageWidth - 15, topLineY)
       .stroke();
 
-    // FOOTERS
     const range = doc.bufferedPageRange();
     const totalPages = range.count;
 
     for (let i = 0; i < totalPages; i++) {
       doc.switchToPage(i);
 
-      if (i === 0) {
-        drawFooter(i + 1, totalPages, false);
-      } else {
-        drawFooter(i + 1, totalPages, true);
+      drawFooterLineAndNumber(i + 1, totalPages);
+
+      if (i === 1) {
+        drawSecondPageTopLabel(i + 1, totalPages);
       }
     }
 
