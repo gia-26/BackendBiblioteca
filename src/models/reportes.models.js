@@ -1,14 +1,13 @@
 import db from '../config/db.js';
 
 export const getDashboardStats = async () => {
-  // Realizamos múltiples conteos en una sola consulta para optimizar
   const [rows] = await db.query(`
     SELECT 
       (SELECT SUM(Monto) FROM tbl_multas) AS TotalMultas,
       (SELECT COUNT(*) FROM tbl_prestamos) AS TotalPrestamos,
-      (SELECT COUNT(*) FROM tbl_prestamos WHERE Id_estado_prestamo IN ('EP001', 'EP003')) AS LibrosDevolver
+      (SELECT COUNT(*) FROM tbl_prestamos WHERE Fecha_devolucion_real IS NULL) AS LibrosDevolver
   `);
-  // Si TotalMultas es null (no hay multas), devolvemos 0
+
   return {
     TotalMultas: rows[0].TotalMultas || 0,
     TotalPrestamos: rows[0].TotalPrestamos || 0,
@@ -34,8 +33,9 @@ export const getReporteMultas = async (inicio, fin) => {
     INNER JOIN tbl_usuarios u ON p.Id_usuario = u.Id_usuario
     LEFT JOIN tbl_alumnos a ON u.Id_usuario = a.Id_alumno
     LEFT JOIN tbl_trabajadores t ON u.Id_usuario = t.Id_trabajador
-    WHERE p.Fecha_devolucion_real BETWEEN ? AND ?
+    WHERE DATE(p.Fecha_prestamo) BETWEEN ? AND ?
   `, [inicio, fin]);
+
   return rows;
 };
 
@@ -57,7 +57,8 @@ export const getReportePrestamos = async (inicio, fin) => {
     INNER JOIN tbl_usuarios u ON p.Id_usuario = u.Id_usuario
     LEFT JOIN tbl_alumnos a ON u.Id_usuario = a.Id_alumno
     LEFT JOIN tbl_trabajadores t ON u.Id_usuario = t.Id_trabajador
-    WHERE p.Fecha_prestamo BETWEEN ? AND ?
+    WHERE DATE(p.Fecha_prestamo) BETWEEN ? AND ?
   `, [inicio, fin]);
+
   return rows;
 };
