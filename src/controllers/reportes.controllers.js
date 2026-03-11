@@ -22,7 +22,6 @@ export const getReporte = async (req, res) => {
       });
     }
 
-    // Validación de fechas en backend
     if (inicio > fin) {
       return res.status(400).json({
         error: "La fecha de inicio no puede ser mayor que la fecha fin"
@@ -54,7 +53,6 @@ export const generarPDF = async (req, res) => {
       });
     }
 
-    // Validación de fechas en backend
     if (inicio > fin) {
       return res.status(400).json({
         error: "La fecha de inicio no puede ser mayor que la fecha fin"
