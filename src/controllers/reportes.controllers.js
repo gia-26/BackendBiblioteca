@@ -1,63 +1,3 @@
-import PDFDocument from 'pdfkit-table';
-import * as reportesModel from '../models/reportes.models.js';
-
-// DASHBOARD 
-
-export const getDashboardStats = async (req, res) => {
-
-  try {
-
-    const stats = await reportesModel.getDashboardStats();
-
-    res.status(200).json(stats);
-
-  } catch (error) {
-
-    res.status(500).json({ error: error.message });
-
-  }
-
-};
-
-
-// REPORTE JSON (TABLA NORMAL)
-
-export const getReporte = async (req, res) => {
-
-  try {
-
-    const { tipo, inicio, fin } = req.query;
-
-    if (!inicio || !fin) {
-      return res.status(400).json({
-        error: "Debe enviar fecha inicio y fecha fin"
-      });
-    }
-
-    let data;
-
-    if (tipo === 'multas') {
-
-      data = await reportesModel.getReporteMultas(inicio, fin);
-
-    } else {
-
-      data = await reportesModel.getReportePrestamos(inicio, fin);
-
-    }
-
-    res.status(200).json(data);
-
-  } catch (error) {
-
-    res.status(500).json({ error: error.message });
-
-  }
-
-};
-
-// GENERAR PDF
-
 export const generarPDF = async (req, res) => {
   try {
     const { tipo, inicio, fin } = req.query;
@@ -98,11 +38,14 @@ export const generarPDF = async (req, res) => {
     // TABLA ANCHA, CASI TODA LA HOJA
     const tableX = 15;
     const tableY = 100;
-    const tableWidth = pageWidth - 30; // ocupa casi toda la hoja horizontal
+    const tableWidth = pageWidth - 30;
 
-    const headerHeight = 20;
-    const rowHeight = 18;
-    const totalHeight = 20;
+    // TAMAÑOS AJUSTADOS PARA MEJOR VISIBILIDAD
+    const headerHeight = 24;
+    const rowHeight = 22;
+    const totalHeight = 22;
+
+    const maxY = footerLineY - 20;
 
     const formatDate = (value) => {
       if (!value) return '';
@@ -158,9 +101,9 @@ export const generarPDF = async (req, res) => {
       const {
         bold = false,
         align = 'left',
-        fontSize = 5.3,
+        fontSize = 6.3,
         paddingX = 3,
-        paddingY = 5
+        paddingY = 6
       } = options;
 
       doc
@@ -196,6 +139,14 @@ export const generarPDF = async (req, res) => {
         .text(`Página ${pageNumber}/${totalPages}`, 0, 56, { align: 'center' });
     };
 
+    const addNewPage = () => {
+      doc.addPage({
+        margin: 0,
+        size: 'A4',
+        layout: 'landscape'
+      });
+    };
+
     // ==========================
     // MULTAS
     // ==========================
@@ -211,7 +162,6 @@ export const generarPDF = async (req, res) => {
         'Monto'
       ];
 
-      // PROPORCIONES PARA OCUPAR TODA LA HOJA
       const proportions = [0.12, 0.13, 0.13, 0.22, 0.10, 0.10, 0.10, 0.10];
       const colWidths = proportions.map(p => tableWidth * p);
 
@@ -223,9 +173,9 @@ export const generarPDF = async (req, res) => {
           drawTextInCell(headers[i], currentX, y, colWidths[i], headerHeight, {
             bold: true,
             align: 'center',
-            fontSize: 5.1,
+            fontSize: 7,
             paddingX: 2,
-            paddingY: 6
+            paddingY: 7
           });
           currentX += colWidths[i];
         }
@@ -243,9 +193,9 @@ export const generarPDF = async (req, res) => {
 
           drawTextInCell(values[i], currentX, y, colWidths[i], rowHeight, {
             align,
-            fontSize: 5.0,
+            fontSize: 6.5,
             paddingX: 3,
-            paddingY: 5
+            paddingY: 6
           });
 
           currentX += colWidths[i];
@@ -268,18 +218,25 @@ export const generarPDF = async (req, res) => {
         drawTextInCell('TOTAL:', x + widthBeforeTotal, y, colWidths[6], totalHeight, {
           bold: true,
           align: 'right',
-          fontSize: 5.6,
+          fontSize: 7.5,
           paddingX: 4,
           paddingY: 6
         });
 
-        drawTextInCell(`$${Number(total).toFixed(2)}`, x + widthBeforeTotal + colWidths[6], y, colWidths[7], totalHeight, {
-          bold: true,
-          align: 'right',
-          fontSize: 5.6,
-          paddingX: 4,
-          paddingY: 6
-        });
+        drawTextInCell(
+          `$${Number(total).toFixed(2)}`,
+          x + widthBeforeTotal + colWidths[6],
+          y,
+          colWidths[7],
+          totalHeight,
+          {
+            bold: true,
+            align: 'right',
+            fontSize: 7.5,
+            paddingX: 4,
+            paddingY: 6
+          }
+        );
       };
 
       drawTopHeader();
@@ -290,6 +247,14 @@ export const generarPDF = async (req, res) => {
 
       for (const row of data) {
         total += Number(row.Monto || 0);
+
+        // Si no caben más filas + total, crear nueva página
+        if (currentY + rowHeight + totalHeight > maxY) {
+          addNewPage();
+          drawTopHeader();
+          drawHeaderRow(tableX, tableY);
+          currentY = tableY + headerHeight;
+        }
 
         drawRow(tableX, currentY, [
           row.Nombre || '',
@@ -303,6 +268,14 @@ export const generarPDF = async (req, res) => {
         ]);
 
         currentY += rowHeight;
+      }
+
+      // Si el total ya no cabe, moverlo a otra página
+      if (currentY + totalHeight > maxY) {
+        addNewPage();
+        drawTopHeader();
+        drawHeaderRow(tableX, tableY);
+        currentY = tableY + headerHeight;
       }
 
       drawTotalRow(tableX, currentY, total);
@@ -335,9 +308,9 @@ export const generarPDF = async (req, res) => {
           drawTextInCell(headers[i], currentX, y, colWidths[i], headerHeight, {
             bold: true,
             align: 'center',
-            fontSize: 5.1,
+            fontSize: 7,
             paddingX: 2,
-            paddingY: 6
+            paddingY: 7
           });
           currentX += colWidths[i];
         }
@@ -354,9 +327,9 @@ export const generarPDF = async (req, res) => {
 
           drawTextInCell(values[i], currentX, y, colWidths[i], rowHeight, {
             align,
-            fontSize: 5.0,
+            fontSize: 6.5,
             paddingX: 3,
-            paddingY: 5
+            paddingY: 6
           });
 
           currentX += colWidths[i];
@@ -369,6 +342,13 @@ export const generarPDF = async (req, res) => {
       let currentY = tableY + headerHeight;
 
       for (const row of data) {
+        if (currentY + rowHeight > maxY) {
+          addNewPage();
+          drawTopHeader();
+          drawHeaderRow(tableX, tableY);
+          currentY = tableY + headerHeight;
+        }
+
         drawRow(tableX, currentY, [
           row.Id || '',
           row.Nombre || '',
@@ -386,21 +366,8 @@ export const generarPDF = async (req, res) => {
     }
 
     // ==========================
-    // SEGUNDA HOJA FIJA
+    // NUMERACIÓN FINAL
     // ==========================
-    doc.addPage({
-      margin: 0,
-      size: 'A4',
-      layout: 'landscape'
-    });
-
-    doc
-      .lineWidth(0.8)
-      .strokeColor('black')
-      .moveTo(marginX, topLineY)
-      .lineTo(pageWidth - marginX, topLineY)
-      .stroke();
-
     const range = doc.bufferedPageRange();
     const totalPages = range.count;
 
@@ -409,7 +376,7 @@ export const generarPDF = async (req, res) => {
 
       drawFooterRight(i + 1, totalPages);
 
-      if (i === 1) {
+      if (i > 0) {
         drawSecondPageLabelTop(i + 1, totalPages);
       }
     }
