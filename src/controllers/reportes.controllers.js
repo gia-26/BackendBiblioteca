@@ -23,9 +23,7 @@ export const getDashboardStats = async (req, res) => {
 // REPORTE JSON (TABLA NORMAL)
 
 export const getReporte = async (req, res) => {
-
   try {
-
     const { tipo, inicio, fin } = req.query;
 
     if (!inicio || !fin) {
@@ -34,27 +32,35 @@ export const getReporte = async (req, res) => {
       });
     }
 
+    const fechaInicio = new Date(inicio);
+    const fechaFin = new Date(fin);
+
+    if (isNaN(fechaInicio) || isNaN(fechaFin)) {
+      return res.status(400).json({
+        error: "Las fechas enviadas no son válidas"
+      });
+    }
+
+    if (fechaFin < fechaInicio) {
+      return res.status(400).json({
+        error: "La fecha fin no puede ser menor que la fecha inicio"
+      });
+    }
+
     let data;
 
     if (tipo === 'multas') {
-
       data = await reportesModel.getReporteMultas(inicio, fin);
-
     } else {
-
       data = await reportesModel.getReportePrestamos(inicio, fin);
-
     }
 
     res.status(200).json(data);
-
   } catch (error) {
-
     res.status(500).json({ error: error.message });
-
   }
-
 };
+
 
 // GENERAR PDF
 
