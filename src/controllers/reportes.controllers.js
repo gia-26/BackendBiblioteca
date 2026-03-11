@@ -164,7 +164,7 @@ export const generarPDF = async (req, res) => {
       const {
         bold = false,
         align = 'left',
-        fontSize = 13,
+        fontSize = 10,
         paddingX = 3,
         paddingY = 5
       } = options;
@@ -240,7 +240,7 @@ export const generarPDF = async (req, res) => {
           drawTextInCell(headers[i], currentX, y, colWidths[i], headerHeight, {
             bold: true,
             align: 'center',
-            fontSize: 10,
+            fontSize: 7,
             paddingX: 2,
             paddingY: 6
           });
@@ -260,7 +260,7 @@ export const generarPDF = async (req, res) => {
 
           drawTextInCell(values[i], currentX, y, colWidths[i], rowHeight, {
             align,
-            fontSize: 10,
+            fontSize: 7,
             paddingX: 3,
             paddingY: 5
           });
@@ -299,7 +299,7 @@ export const generarPDF = async (req, res) => {
           {
             bold: true,
             align: 'right',
-            fontSize:10,
+            fontSize:7,
             paddingX: 4,
             paddingY: 6
           }
@@ -370,7 +370,7 @@ export const generarPDF = async (req, res) => {
           drawTextInCell(headers[i], currentX, y, colWidths[i], headerHeight, {
             bold: true,
             align: 'center',
-            fontSize: 10,
+            fontSize: 7,
             paddingX: 2,
             paddingY: 6
           });
@@ -389,7 +389,7 @@ export const generarPDF = async (req, res) => {
 
           drawTextInCell(values[i], currentX, y, colWidths[i], rowHeight, {
             align,
-            fontSize: 10,
+            fontSize: 7,
             paddingX: 3,
             paddingY: 5
           });
