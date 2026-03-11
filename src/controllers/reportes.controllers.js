@@ -41,7 +41,7 @@ export const getReporte = async (req, res) => {
       });
     }
 
-    if (fechaFin < fechaInicio) {
+    if (fechaFin > fechaInicio) {
       return res.status(400).json({
         error: "La fecha fin no puede ser menor que la fecha inicio"
       });
