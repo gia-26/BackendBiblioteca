@@ -10,6 +10,16 @@ export const getAllEjemplares = async (req, res) => {
   }
 }
 
+export const getAllEjemplaresByTitulo = async (req, res) => {
+  try {
+    const titulo = req.query.q || '';
+    const ejemplares = await prestamosModel.getAllEjemplaresBuscar(titulo);
+    res.status(200).json(ejemplares);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 export const getAllTiposPrestamos = async (req, res) => {
   try {
     const tiposPrestamos = await prestamosModel.getAllTiposPrestamos();
