@@ -12,9 +12,20 @@ export const getAllEjemplares = async () => {
         esEjm.Estado_ejemplar AS 'Estado' 
     FROM tbl_ejemplares ejm 
     INNER JOIN tbl_libros lib ON ejm.Id_libro = lib.Id_libro 
-    INNER JOIN tbl_estado_ejemplar esEjm ON ejm.Id_estado_ejemplar = esEjm.Id_estado_ejemplar 
+    INNER JOIN tbl_estado_ejemplar esEjm 
+        ON ejm.Id_estado_ejemplar = esEjm.Id_estado_ejemplar 
     INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor 
-    WHERE lib.Estado = 1 ORDER BY lib.Titulo ASC`);
+    WHERE lib.Estado = 1
+    AND ejm.Id_libro IN (
+            SELECT ej.Id_libro
+            FROM tbl_ejemplares ej
+            INNER JOIN tbl_estado_ejemplar est 
+                ON ej.Id_estado_ejemplar = est.Id_estado_ejemplar
+            WHERE est.Estado_ejemplar = 'Disponible'
+            GROUP BY ej.Id_libro
+            HAVING COUNT(*) > 1
+    )
+    ORDER BY lib.Titulo ASC;`);
   return rows;
 }
 
