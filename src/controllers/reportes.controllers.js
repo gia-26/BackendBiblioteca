@@ -1,83 +1,66 @@
 import PDFDocument from 'pdfkit-table';
 import * as reportesModel from '../models/reportes.models.js';
 
-// DASHBOARD
+// DASHBOARD 
+
 export const getDashboardStats = async (req, res) => {
+
   try {
+
     const stats = await reportesModel.getDashboardStats();
+
     res.status(200).json(stats);
+
   } catch (error) {
+
     res.status(500).json({ error: error.message });
+
   }
+
 };
 
+
 // REPORTE JSON (TABLA NORMAL)
+
 export const getReporte = async (req, res) => {
+
   try {
+
     const { tipo, inicio, fin } = req.query;
 
     if (!inicio || !fin) {
       return res.status(400).json({
         error: "Debe enviar fecha inicio y fecha fin"
-      });
-    }
-
-    const fechaInicio = new Date(inicio);
-    const fechaFin = new Date(fin);
-
-    if (isNaN(fechaInicio.getTime()) || isNaN(fechaFin.getTime())) {
-      return res.status(400).json({
-        error: "Las fechas enviadas no son válidas"
-      });
-    }
-
-    // CORRECTO: fin no puede ser menor que inicio
-    if (fechaFin < fechaInicio) {
-      return res.status(400).json({
-        error: "La fecha fin no puede ser menor que la fecha inicio"
       });
     }
 
     let data;
 
     if (tipo === 'multas') {
+
       data = await reportesModel.getReporteMultas(inicio, fin);
+
     } else {
+
       data = await reportesModel.getReportePrestamos(inicio, fin);
+
     }
 
     res.status(200).json(data);
+
   } catch (error) {
+
     res.status(500).json({ error: error.message });
+
   }
+
 };
+
 
 // GENERAR PDF
 export const generarPDF = async (req, res) => {
   try {
     const { tipo, inicio, fin } = req.query;
-
-    if (!inicio || !fin) {
-      return res.status(400).json({
-        error: "Debe enviar fecha inicio y fecha fin"
-      });
-    }
-
-    const fechaInicio = new Date(inicio);
-    const fechaFin = new Date(fin);
-
-    if (isNaN(fechaInicio.getTime()) || isNaN(fechaFin.getTime())) {
-      return res.status(400).json({
-        error: "Las fechas enviadas no son válidas"
-      });
-    }
-
-    // CORRECTO: fin no puede ser menor que inicio
-    if (fechaFin < fechaInicio) {
-      return res.status(400).json({
-        error: "La fecha fin no puede ser menor que la fecha inicio"
-      });
-    }
 
     let data = [];
 
@@ -116,12 +99,15 @@ export const generarPDF = async (req, res) => {
     const tableY = 100;
     const tableWidth = pageWidth - 30;
 
+    // tamaños del diseño
     const headerHeight = 20;
     const rowHeight = 18;
     const totalHeight = 20;
 
+    // para hojas siguientes
     const continuationY = 62;
 
+    // tamaño unificado para tablas
     const fontHeaderTable = 7;
     const fontRowTable = 7;
     const fontTotalTable = 7;
@@ -129,7 +115,7 @@ export const generarPDF = async (req, res) => {
     const formatDate = (value) => {
       if (!value) return '';
       const fecha = new Date(value);
-      if (isNaN(fecha.getTime())) return String(value).slice(0, 10);
+      if (isNaN(fecha)) return String(value).slice(0, 10);
       const y = fecha.getFullYear();
       const m = String(fecha.getMonth() + 1).padStart(2, '0');
       const d = String(fecha.getDate()).padStart(2, '0');
@@ -452,6 +438,7 @@ export const generarPDF = async (req, res) => {
 
     for (let i = 0; i < totalPages; i++) {
       doc.switchToPage(i);
+
       drawFooterRight(i + 1, totalPages);
 
       if (i > 0) {
