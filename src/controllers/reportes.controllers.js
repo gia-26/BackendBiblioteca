@@ -57,6 +57,7 @@ export const getReporte = async (req, res) => {
 };
 
 // GENERAR PDF
+
 export const generarPDF = async (req, res) => {
   try {
     const { tipo, inicio, fin } = req.query;
@@ -98,13 +99,18 @@ export const generarPDF = async (req, res) => {
     const tableY = 100;
     const tableWidth = pageWidth - 30;
 
-    // tamaños originales, como tu diseño
+    // tamaños del diseño
     const headerHeight = 20;
     const rowHeight = 18;
     const totalHeight = 20;
 
     // para hojas siguientes
     const continuationY = 62;
+
+    // tamaño unificado para tablas
+    const fontHeaderTable = 7;
+    const fontRowTable = 7;
+    const fontTotalTable = 7;
 
     const formatDate = (value) => {
       if (!value) return '';
@@ -164,7 +170,7 @@ export const generarPDF = async (req, res) => {
       const {
         bold = false,
         align = 'left',
-        fontSize = 10,
+        fontSize = fontRowTable,
         paddingX = 3,
         paddingY = 5
       } = options;
@@ -240,7 +246,7 @@ export const generarPDF = async (req, res) => {
           drawTextInCell(headers[i], currentX, y, colWidths[i], headerHeight, {
             bold: true,
             align: 'center',
-            fontSize: 7,
+            fontSize: fontHeaderTable,
             paddingX: 2,
             paddingY: 6
           });
@@ -260,7 +266,7 @@ export const generarPDF = async (req, res) => {
 
           drawTextInCell(values[i], currentX, y, colWidths[i], rowHeight, {
             align,
-            fontSize: 7,
+            fontSize: fontRowTable,
             paddingX: 3,
             paddingY: 5
           });
@@ -285,7 +291,7 @@ export const generarPDF = async (req, res) => {
         drawTextInCell('TOTAL:', x + widthBeforeTotal, y, colWidths[6], totalHeight, {
           bold: true,
           align: 'right',
-          fontSize: 5.6,
+          fontSize: fontTotalTable,
           paddingX: 4,
           paddingY: 6
         });
@@ -299,7 +305,7 @@ export const generarPDF = async (req, res) => {
           {
             bold: true,
             align: 'right',
-            fontSize:7,
+            fontSize: fontTotalTable,
             paddingX: 4,
             paddingY: 6
           }
@@ -315,7 +321,6 @@ export const generarPDF = async (req, res) => {
       for (const row of data) {
         total += Number(row.Monto || 0);
 
-        // si la fila + total ya no caben, nueva hoja de continuación
         if (currentY + rowHeight + totalHeight > footerLineY - 8) {
           addContinuationPage();
           currentY = continuationY;
@@ -370,7 +375,7 @@ export const generarPDF = async (req, res) => {
           drawTextInCell(headers[i], currentX, y, colWidths[i], headerHeight, {
             bold: true,
             align: 'center',
-            fontSize: 7,
+            fontSize: fontHeaderTable,
             paddingX: 2,
             paddingY: 6
           });
@@ -389,7 +394,7 @@ export const generarPDF = async (req, res) => {
 
           drawTextInCell(values[i], currentX, y, colWidths[i], rowHeight, {
             align,
-            fontSize: 7,
+            fontSize: fontRowTable,
             paddingX: 3,
             paddingY: 5
           });
@@ -404,7 +409,6 @@ export const generarPDF = async (req, res) => {
       let currentY = tableY + headerHeight;
 
       for (const row of data) {
-        // en hojas siguientes solo continúa la tabla, sin repetir encabezado
         if (currentY + rowHeight > footerLineY - 8) {
           addContinuationPage();
           currentY = continuationY;
