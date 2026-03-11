@@ -2,30 +2,18 @@ import PDFDocument from 'pdfkit-table';
 import * as reportesModel from '../models/reportes.models.js';
 
 // DASHBOARD 
-
 export const getDashboardStats = async (req, res) => {
-
   try {
-
     const stats = await reportesModel.getDashboardStats();
-
     res.status(200).json(stats);
-
   } catch (error) {
-
     res.status(500).json({ error: error.message });
-
   }
-
 };
 
-
 // REPORTE JSON (TABLA NORMAL)
-
 export const getReporte = async (req, res) => {
-
   try {
-
     const { tipo, inicio, fin } = req.query;
 
     if (!inicio || !fin) {
@@ -34,33 +22,44 @@ export const getReporte = async (req, res) => {
       });
     }
 
+    // Validación de fechas en backend
+    if (inicio > fin) {
+      return res.status(400).json({
+        error: "La fecha de inicio no puede ser mayor que la fecha fin"
+      });
+    }
+
     let data;
 
     if (tipo === 'multas') {
-
       data = await reportesModel.getReporteMultas(inicio, fin);
-
     } else {
-
       data = await reportesModel.getReportePrestamos(inicio, fin);
-
     }
 
     res.status(200).json(data);
-
   } catch (error) {
-
     res.status(500).json({ error: error.message });
-
   }
-
 };
-
 
 // GENERAR PDF
 export const generarPDF = async (req, res) => {
   try {
     const { tipo, inicio, fin } = req.query;
+
+    if (!inicio || !fin) {
+      return res.status(400).json({
+        error: "Debe enviar fecha inicio y fecha fin"
+      });
+    }
+
+    // Validación de fechas en backend
+    if (inicio > fin) {
+      return res.status(400).json({
+        error: "La fecha de inicio no puede ser mayor que la fecha fin"
+      });
+    }
 
     let data = [];
 
