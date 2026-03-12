@@ -1,4 +1,4 @@
-import * as tiposModel from '../models/tipos_usuario.models.js';
+import * as tiposModel from '../models/tipo_usuarios.models.js';
 
 export const getTipos = async (req, res) => {
     try {
