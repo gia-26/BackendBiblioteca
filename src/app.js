@@ -18,6 +18,7 @@ import generosRoutes from "./routes/generos.routes.js";
 import aniosRoutes from './routes/anio_edicion.routes.js';
 import areasRoutes from './routes/area_conocimiento.routes.js';
 import editorialesRoutes from './routes/editoriales.routes.js';
+import tiposUsuarioRoutes from './routes/tipos_usuario.routes.js';
 
 
 //Creamos el objeto de express para nuestra aplicación
@@ -50,6 +51,7 @@ app.use("/generos", generosRoutes);
 app.use('/api/anios', aniosRoutes);
 app.use('/api/areas', areasRoutes);
 app.use('/api/editoriales', editorialesRoutes);
+app.use('/api/tipos_usuario', tiposUsuarioRoutes);
 
 app.get('/',(req, res)=>{
     res.send("Esto es mi primer API desde express... publicada en vercel...");
