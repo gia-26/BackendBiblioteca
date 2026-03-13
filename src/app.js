@@ -53,6 +53,7 @@ app.use('/api/areas', areasRoutes);
 app.use('/api/editoriales', editorialesRoutes);
 app.use('/api/tipo_usuarios', tipoUsuariosRoutes);
 
+
 app.get('/',(req, res)=>{
     res.send("Esto es mi primer API desde express... publicada en vercel...");
 })
