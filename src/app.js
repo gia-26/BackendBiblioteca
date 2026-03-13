@@ -14,7 +14,6 @@ import historialPrestamosRoutes from './routes/usuarios.routes.js';
 import personalRoutes from './routes/personal.routes.js';
 import bibliotecaRoutes from './routes/informacion_biblioteca.routes.js';
 import generosRoutes from "./routes/generos.routes.js";
-//import loginRoutes from './routes/login.routes.js';
 import aniosRoutes from './routes/anio_edicion.routes.js';
 import areasRoutes from './routes/area_conocimiento.routes.js';
 import editorialesRoutes from './routes/editoriales.routes.js';
