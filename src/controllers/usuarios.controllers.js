@@ -5,7 +5,8 @@ import * as usuariosModels from '../models/usuarios.models.js';
 export const editPasswordUsuario = async (req, res) => {
     try {
         console.log(req.body);
-        const { Id_usuario, password } = req.body;
+        const Id_usuario = req.body.Id_usuario;
+        const password = req.body.password;
         if (!Id_usuario || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
 
         const salt = await bcrypt.genSalt(10);
