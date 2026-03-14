@@ -13,7 +13,6 @@ export const editUsuarioPassword = async (idUsuario, passwordHash) => {
         'UPDATE tbl_usuarios SET Password = ? WHERE Id_usuario = ?',
         [passwordHash, idUsuario]
     );
-
     return result.affectedRows > 0;
 };
 

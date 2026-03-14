@@ -18,6 +18,7 @@ import aniosRoutes from './routes/anio_edicion.routes.js';
 import areasRoutes from './routes/area_conocimiento.routes.js';
 import editorialesRoutes from './routes/editoriales.routes.js';
 import tipoUsuariosRoutes from './routes/tipo_usuarios.routes.js';
+import loginRoutes from './routes/login.routes.js';
 
 
 //Creamos el objeto de express para nuestra aplicación
@@ -51,7 +52,7 @@ app.use('/api/anios', aniosRoutes);
 app.use('/api/areas', areasRoutes);
 app.use('/api/editoriales', editorialesRoutes);
 app.use('/api/tipo_usuarios', tipoUsuariosRoutes);
-
+app.use('/api/login', loginRoutes);
 
 app.get('/',(req, res)=>{
     res.send("Esto es mi primer API desde express... publicada en vercel...");

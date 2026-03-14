@@ -1,5 +1,4 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import * as usuariosModels from '../models/usuarios.models.js';
 
 export const editPasswordUsuario = async (req, res) => {
