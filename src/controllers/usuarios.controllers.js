@@ -4,13 +4,13 @@ import * as usuariosModels from '../models/usuarios.models.js';
 
 export const editPasswordUsuario = async (req, res) => {
     try {
-        const { idUsuario, password } = req.body;
-        if (!idUsuario || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        const { Id_usuario, password } = req.body;
+        if (!Id_usuario || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
 
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
 
-        const updated = await usuariosModels.editUsuarioPassword(idUsuario, passwordHash);
+        const updated = await usuariosModels.editUsuarioPassword(Id_usuario, passwordHash);
         if (!updated) return res.status(404).json({ message: 'Usuario no encontrado' });
 
         res.status(200).json({ message: 'Contraseña actualizada con éxito' });
