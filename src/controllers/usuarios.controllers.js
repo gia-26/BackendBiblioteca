@@ -15,7 +15,7 @@ export const editPasswordUsuario = async (req, res) => {
 
         res.status(200).json({ message: 'Contraseña actualizada con éxito' });
     } catch (error) {
-        res.status(500).json({ error: 'Error interno en el servidor' });
+        res.status(500).json({ error: error.message });
     }
 };
 
