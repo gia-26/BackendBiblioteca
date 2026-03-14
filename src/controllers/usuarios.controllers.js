@@ -4,6 +4,7 @@ import * as usuariosModels from '../models/usuarios.models.js';
 
 export const editPasswordUsuario = async (req, res) => {
     try {
+        console.log(req.body);
         const { Id_usuario, password } = req.body;
         if (!Id_usuario || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
 
