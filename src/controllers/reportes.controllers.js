@@ -429,9 +429,6 @@ export const generarPDF = async (req, res) => {
       }
     }
 
-    // ==========================
-    // NUMERACIÓN FINAL
-    // ==========================
     const range = doc.bufferedPageRange();
     const totalPages = range.count;
 
