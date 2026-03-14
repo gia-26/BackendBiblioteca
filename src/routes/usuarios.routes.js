@@ -8,7 +8,7 @@ router.get('/tipos', ctrl.getAllTiposUsuario);
 router.get('/todos', ctrl.getAllUsuarios);
 
 // Editar contraseña
-router.post('/editar/password', ctrl.editPasswordUsuario);
+router.put('/editar/password', ctrl.editPasswordUsuario);
 
 // Obtener todas las multas del usuario logueado
 router.get('/', ctrl.getMultasByUsuario);
