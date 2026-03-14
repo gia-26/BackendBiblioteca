@@ -4,7 +4,6 @@ import * as usuariosModels from '../models/usuarios.models.js';
 
 export const editPasswordUsuario = async (req, res) => {
     try {
-        console.log(req.body);
         const Id_usuario = req.body.Id_usuario;
         const password = req.body.password;
         if (!Id_usuario || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
@@ -15,7 +14,7 @@ export const editPasswordUsuario = async (req, res) => {
         const updated = await usuariosModels.editUsuarioPassword(Id_usuario, passwordHash);
         if (!updated) return res.status(404).json({ message: 'Usuario no encontrado' });
 
-        res.status(200).json({ message: 'Contraseña actualizada con éxito' });
+        res.status(200).json({ success: true, message: 'Contraseña actualizada con éxito' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
