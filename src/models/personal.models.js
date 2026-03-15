@@ -4,6 +4,7 @@ export const getAllPersonal = async () => {
     const [rows] = await db.query(`
         SELECT
             pers.Id_personal,
+            pers.Id_trabajador,
             trab.Nombre,
             trab.Apellido_P,
             trab.Apellido_M,
