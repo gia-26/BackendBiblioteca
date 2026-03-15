@@ -14,3 +14,10 @@ export const getAllPersonal = async () => {
     `);
     return rows;
 }
+
+export const getAllTiposRoles = async () => {
+    const [rows] = await db.query(`
+        SELECT Id_rol, Tipo_rol FROM tbl_roles;
+    `);
+    return rows;
+}

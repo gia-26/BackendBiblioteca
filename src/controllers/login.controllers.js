@@ -8,10 +8,7 @@ export const login = async (req, res) => {
         const idUsuario = req.body.idUsuario;
         const password = req.body.password;
 
-        console.log('Datos recibidos:', { sesion, idUsuario, password });
-
         const usuario = await loginModels.findUsuarioById(idUsuario, sesion);
-        console.log(usuario.password_hash);
         if (!usuario) return res.status(401).json({ message: 'Credenciales inválidas' });
 
         const esValida = await bcrypt.compare(password, usuario.password_hash);
