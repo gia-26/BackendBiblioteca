@@ -4,7 +4,10 @@ import * as loginModels from '../models/login.models.js';
 
 export const login = async (req, res) => {
     try {
-        const { sesion, idUsuario, password } = req.body;
+        const sesion  = req.body.sesion;
+        const idUsuario = req.body.idUsuario;
+        const password = req.body.password;
+
         const usuario = await loginModels.findUsuarioById(idUsuario, sesion);
         if (!usuario) return res.status(401).json({ message: 'Credenciales inválidas' });
 
