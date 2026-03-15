@@ -7,7 +7,8 @@ export const getAllPersonal = async () => {
             trab.Nombre,
             trab.Apellido_P,
             trab.Apellido_M,
-            rols.Tipo_rol
+            rols.Tipo_rol,
+            rols.Id_rol
         FROM tbl_personal AS pers
         INNER JOIN tbl_trabajadores trab ON trab.Id_trabajador = pers.Id_trabajador
         INNER JOIN tbl_roles rols ON rols.Id_rol = pers.Id_rol;   
