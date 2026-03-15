@@ -23,3 +23,11 @@ export const getAllTiposRoles = async () => {
     `);
     return rows;
 }
+
+export const editUsuarioPassword = async (idUsuario, passwordHash) => {
+    const [result] = await db.query(
+        'UPDATE tbl_personal SET Password = ? WHERE Id_personal = ?',
+        [passwordHash, idUsuario]
+    );
+    return result.affectedRows > 0;
+};
