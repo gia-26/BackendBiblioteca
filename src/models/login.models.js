@@ -37,5 +37,5 @@ export const findUsuarioById = async (idUsuario, sesion) => {
       WHERE p.Id_personal = ?;
     `, [idUsuario]);
   }
-  return rows;
+  return rows[0] || null;
 };
