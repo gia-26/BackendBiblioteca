@@ -4,6 +4,7 @@ import * as ctrl from '../controllers/informacion_biblioteca.controllers.js';
 const router = Router();
 
 router.get('/', ctrl.getInformacion);
+router.get('/informacion', ctrl.getInformacion);
 router.put('/informacion', ctrl.updateInformacion);
 
 router.get('/mvo', ctrl.getMVO);
