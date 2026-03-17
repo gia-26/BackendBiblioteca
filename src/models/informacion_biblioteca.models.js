@@ -4,9 +4,9 @@ import db from '../config/db.js';
 export const getInformacion = async () => {
   const [rows] = await db.query(`
     SELECT 
-      quienes_somos AS quienesSomos,
-      historia
-    FROM tbl_biblioteca_info
+      QuienesSomos AS QuienesSomos,
+      NuestraHistoria
+    FROM tbl_informacion_biblioteca
     LIMIT 1
   `);
   return rows[0];
@@ -17,15 +17,15 @@ export const updateInformacion = async (data) => {
 
   if(data.quienesSomos){
     await db.query(`
-      UPDATE tbl_biblioteca_info 
-      SET quienes_somos = ?
+      UPDATE tbl_informacion_biblioteca 
+      SET QuienesSomos = ?
     `,[data.quienesSomos]);
   }
 
   if(data.historia){
     await db.query(`
-      UPDATE tbl_biblioteca_info 
-      SET historia = ?
+      UPDATE tbl_informacion_biblioteca
+      SET NuestraHistoria = ?
     `,[data.historia]);
   }
 
@@ -37,10 +37,10 @@ export const updateInformacion = async (data) => {
 export const getMVO = async () => {
   const [rows] = await db.query(`
     SELECT 
-      mision,
-      vision,
-      objetivo
-    FROM tbl_biblioteca_info
+      Mision,
+      Vision,
+      Objetivo
+    FROM tbl_informacion_biblioteca
     LIMIT 1
   `);
   return rows[0];
@@ -51,8 +51,8 @@ export const getMVO = async () => {
 export const updateMision = async (mision) => {
 
   await db.query(`
-    UPDATE tbl_biblioteca_info
-    SET mision = ?
+    UPDATE tbl_informacion_biblioteca
+    SET Mision = ?
   `,[mision]);
 
   return { success: true };
@@ -63,8 +63,8 @@ export const updateMision = async (mision) => {
 export const updateVision = async (vision) => {
 
   await db.query(`
-    UPDATE tbl_biblioteca_info
-    SET vision = ?
+    UPDATE tbl_informacion_biblioteca
+    SET Vision = ?
   `,[vision]);
 
   return { success: true };
@@ -75,8 +75,8 @@ export const updateVision = async (vision) => {
 export const updateObjetivo = async (objetivo) => {
 
   await db.query(`
-    UPDATE tbl_biblioteca_info
-    SET objetivo = ?
+    UPDATE tbl_informacion_biblioteca
+    SET Objetivo = ?
   `,[objetivo]);
 
   return { success: true };
