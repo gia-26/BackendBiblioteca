@@ -1,5 +1,48 @@
 import db from '../config/db.js';
 
+export const createUsuario = async (idUsuario, idTipoUsuario, passwordHash) => {
+    const [result] = await db.query(
+        'INSERT INTO tbl_usuarios(Id_usuario, Id_tipo_usuario, Password, Estado) VALUES (?, ?, ?, ?)',
+        [idUsuario, idTipoUsuario, passwordHash, '1']
+    );
+    return result.insertId;
+};
+
+export const editUsuarioPassword = async (idUsuario, passwordHash) => {
+    const [result] = await db.query(
+        'UPDATE tbl_usuarios SET Password = ? WHERE Id_usuario = ?',
+        [passwordHash, idUsuario]
+    );
+    return result.affectedRows > 0;
+};
+
+export const getAllUsuarios = async () => {
+  const [rows] = await db.query(`
+    SELECT
+      u.Id_usuario,
+        a.Nombre,
+        a.Apellido_P,
+        a.Apellido_M,
+        tu.Tipo_usuario
+    FROM tbl_usuarios u
+    INNER JOIN tbl_tipo_usuarios tu ON u.Id_tipo_usuario = tu.Id_tipo_usuario
+    RIGHT JOIN tbl_alumnos a ON a.Id_alumno = u.Id_usuario
+    WHERE u.Estado != 0 AND a.Estado != 0
+    UNION ALL
+    SELECT
+      u.Id_usuario,
+        t.Nombre,
+        t.Apellido_P,
+        t.Apellido_M,
+        tu.Tipo_usuario
+    FROM tbl_usuarios u
+    INNER JOIN tbl_tipo_usuarios tu ON u.Id_tipo_usuario = tu.Id_tipo_usuario
+    RIGHT JOIN tbl_trabajadores t ON t.Id_trabajador = u.Id_usuario
+    WHERE u.Estado != 0;
+  `);
+  return rows;
+};
+
 export const getUsuariosById = async ({id, tipo}) => {
     if (tipo === 'TU001') {
       const [rows] = await db.query('SELECT Nombre, Id_alumno AS id FROM tbl_alumnos WHERE Id_alumno = ?', [id]);

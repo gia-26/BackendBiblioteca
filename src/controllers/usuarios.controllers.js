@@ -1,4 +1,23 @@
+import bcrypt from 'bcryptjs';
 import * as usuariosModels from '../models/usuarios.models.js';
+
+export const editPasswordUsuario = async (req, res) => {
+    try {
+        const Id_usuario = req.body.Id_usuario;
+        const password = req.body.password;
+        if (!Id_usuario || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(password, salt);
+
+        const updated = await usuariosModels.editUsuarioPassword(Id_usuario, passwordHash);
+        if (!updated) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+        res.status(200).json({ success: true, message: 'Contraseña actualizada con éxito' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
 
 export const getUsuariosById = async (req, res) => {
     try {
@@ -74,3 +93,12 @@ export const getPrestamosUsuario = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const getAllUsuarios = async (req, res) => {
+  try {
+    const usuarios = await usuariosModels.getAllUsuarios();
+    res.status(200).json(usuarios);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}

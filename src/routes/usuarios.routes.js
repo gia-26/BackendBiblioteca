@@ -5,7 +5,8 @@ const router = Router();
 
 router.get("/buscar", ctrl.getUsuariosById);
 router.get('/tipos', ctrl.getAllTiposUsuario);
-
+router.get('/todos', ctrl.getAllUsuarios);
+router.put('/editar/password', ctrl.editPasswordUsuario);
 
 // Obtener todas las multas del usuario logueado
 router.get('/', ctrl.getMultasByUsuario);
