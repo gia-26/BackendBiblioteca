@@ -4,8 +4,8 @@ import db from '../config/db.js';
 export const getInformacion = async () => {
   const [rows] = await db.query(`
     SELECT 
-      QuienesSomos AS QuienesSomos,
-      NuestraHistoria
+      QuienesSomos AS quienesSomos,
+      NuestraHistoria AS historia
     FROM tbl_informacion_biblioteca
     LIMIT 1
   `);
@@ -37,9 +37,9 @@ export const updateInformacion = async (data) => {
 export const getMVO = async () => {
   const [rows] = await db.query(`
     SELECT 
-      Mision,
-      Vision,
-      Objetivo
+      Mision AS mision,
+      Vision AS vision,
+      Objetivo AS objetivo
     FROM tbl_informacion_biblioteca
     LIMIT 1
   `);
