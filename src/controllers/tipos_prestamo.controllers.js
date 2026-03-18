@@ -11,8 +11,8 @@ export const getTiposPrestamo = async (req, res) => {
 
 export const agregarTipoPrestamo = async (req, res) => {
     try {
-        const { Nombre } = req.body;
-        const result = await tiposPrestamoModel.createTipoPrestamo(Nombre);
+        const { Tipo_prestamo } = req.body;    // ✅ corregido
+        const result = await tiposPrestamoModel.createTipoPrestamo(Tipo_prestamo);
         res.status(201).json(result);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -21,8 +21,8 @@ export const agregarTipoPrestamo = async (req, res) => {
 
 export const editarTipoPrestamo = async (req, res) => {
     try {
-        const { Id_tipo_prestamo, Nombre } = req.body;
-        const result = await tiposPrestamoModel.updateTipoPrestamo(Id_tipo_prestamo, Nombre);
+        const { Id_tipo_prestamo, Tipo_prestamo } = req.body;    // ✅ corregido
+        const result = await tiposPrestamoModel.updateTipoPrestamo(Id_tipo_prestamo, Tipo_prestamo);
         res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ error: error.message });
