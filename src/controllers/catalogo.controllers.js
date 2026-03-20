@@ -61,3 +61,38 @@ export const getCatalogoByBusqueda = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+export const getCatalogoAvanzado = async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 5;
+        const skip = parseInt(req.query.skip) || 0;
+        
+        const filtros = {
+            genero: req.query.genero || null,
+            autor: req.query.autor || null,
+            titulo: req.query.titulo || null,
+            anio: req.query.anio || null
+        };
+
+        // Verificar si hay al menos un filtro
+        if (!filtros.genero && !filtros.autor && !filtros.titulo && !filtros.anio) {
+            return res.status(400).json({ 
+                error: 'Se requiere al menos un filtro de búsqueda' 
+            });
+        }
+
+        const resultados = await catalogoModels.getCatalogoByIA(filtros);
+        
+        const catalogo = {
+            libros: resultados,
+            total: resultados.length,
+            limit: limit,
+            skip: skip
+        };
+
+        res.status(200).json(catalogo);
+    } catch (error) {
+        console.error('Error en getCatalogoAvanzado:', error);
+        res.status(500).json({ error: error.message });
+    }
+};

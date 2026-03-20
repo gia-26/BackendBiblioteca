@@ -5,5 +5,6 @@ const router = Router();
 
 router.get('/', ctrl.getCatalogo);
 router.get('/buscar', ctrl.getCatalogoByBusqueda)
+router.get('/ia', ctrl.getCatalogoAvanzado);
 
 export default router;
