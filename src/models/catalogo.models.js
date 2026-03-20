@@ -119,8 +119,7 @@ export const getCatalogoByIA = async (filtros = {}) => {
         SELECT 
             lib.Id_libro, 
             lib.Titulo, 
-            aut.Nombre AS Autor,
-            gen.Nombre AS Genero,
+            aut.Nombre,
             CASE 
                 WHEN CHAR_LENGTH(lib.Sinopsis) > 100 
                 THEN CONCAT(LEFT(lib.Sinopsis, 100), '...') 
