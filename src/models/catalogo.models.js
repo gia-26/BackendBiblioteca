@@ -139,17 +139,17 @@ export const getCatalogoByIA = async (filtros = {}) => {
                 WHERE Estado_ejemplar != 'Prestado'
             )
         WHERE lib.Estado != 0
-            AND (? IS NULL OR gen.Nombre = ?)
-            AND (? IS NULL OR aut.Nombre = ?)
-            AND (? IS NULL OR lib.Titulo = ?)
+            AND (? IS NULL OR gen.Nombre LIKE ?)
+            AND (? IS NULL OR aut.Nombre LIKE ?)
+            AND (? IS NULL OR lib.Titulo LIKE ?)
             AND (? IS NULL OR ae.Anio_edicion = ?)
         GROUP BY lib.Id_libro, lib.Titulo, aut.Nombre, gen.Nombre, lib.Sinopsis, lib.Imagen
         LIMIT ? OFFSET ?
     `, 
     [
-        genero, genero,
-        autor, autor,
-        titulo, titulo,
+        genero, `%${genero}%`,
+        autor, `%${autor}%`,
+        titulo, `%${titulo}%`,
         anio, anio,
         parseInt(limit), 
         parseInt(offset)
