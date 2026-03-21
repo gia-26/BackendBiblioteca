@@ -3,20 +3,25 @@ import * as librosModel from '../models/libros.models.js';
 export const getLibrosById = async (req, res) => {
     try {
         const { id } = req.params;
-        const libro = await librosModel.getLibrosById(id);
-        res.json(libro);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
 
-export const getSubgenerosByLibroId = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const subgeneros = await librosModel.getSubgenerosByLibroId(id);
-        res.json(subgeneros);
-    }
-    catch (error) {
+        if (!id) {
+            return res.status(400).json({ error: "ID requerido" });
+        }
+
+        const libroBase = await librosModel.getLibrosById(id);
+
+        if (!libroBase) {
+            return res.status(404).json({ error: "Libro no encontrado" });
+        }
+
+        //Agregar subgeneros, coautores, editoriales secundarias y ejemplares al objeto libro
+        libroBase.subgeneros = await librosModel.getSubgenerosByLibroId(id);
+        libroBase.coautores = await librosModel.getCouautoresByLibroId(id);
+        libroBase.editorialesSecundarias = await librosModel.getEditorialesSecundariasByLibroId(id);
+        libroBase.ejemplares = await librosModel.getEjemplaresByLibroId(id);
+        
+        res.status(200).json(libro);
+    } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
