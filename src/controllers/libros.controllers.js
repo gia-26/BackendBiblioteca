@@ -19,8 +19,8 @@ export const getLibrosById = async (req, res) => {
         libroBase.coautores = await librosModel.getCouautoresByLibroId(id);
         libroBase.editorialesSecundarias = await librosModel.getEditorialesSecundariasByLibroId(id);
         libroBase.ejemplares = await librosModel.getEjemplaresByLibroId(id);
-        
-        res.status(200).json(libro);
+
+        res.status(200).json(libroBase);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
