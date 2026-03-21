@@ -3,20 +3,15 @@ import * as librosModel from '../models/libros.models.js';
 export const getLibrosById = async (req, res) => {
     try {
         const { id } = req.params;
-        const libro = await librosModel.getLibrosById(id);
-        res.json(libro);
+        const libro = {
+            ...(await librosModel.getLibrosById(id))[0],
+            subgeneros: await librosModel.getSubgenerosByLibroId(id),
+            coautores: await librosModel.getCouautoresByLibroId(id),
+            editorialesSecundarias: await librosModel.getEditorialesSecundariasByLibroId(id),
+            ejemplares: await librosModel.getEjemplaresByLibroId(id)
+        };
+        res.status(200).json(libro);
     } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
-
-export const getSubgenerosByLibroId = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const subgeneros = await librosModel.getSubgenerosByLibroId(id);
-        res.json(subgeneros);
-    }
-    catch (error) {
         res.status(500).json({ error: error.message });
     }
 }

@@ -42,6 +42,34 @@ export const getSubgenerosByLibroId = async (idLibro) => {
     return rows;
 }
 
+export const getCouautoresByLibroId = async (idLibro) => {
+    const [rows] = await db.query(`
+        SELECT a.Id_autor, a.Nombre
+        FROM tbl_coautores coaut
+        INNER JOIN tbl_autores a ON coaut.Id_autor = a.Id_autor
+        WHERE coaut.Id_libro = ?;
+    `, [idLibro]);
+    return rows;
+}
+
+export const getEditorialesSecundariasByLibroId = async (idLibro) => {
+    const [rows] = await db.query(`
+        SELECT e.Id_editorial, e.Nombre
+        FROM tbl_libros_editoriales libEdit
+        INNER JOIN tbl_editoriales e ON libEdit.Id_editorial = e.Id_editorial
+        WHERE libEdit.Id_libro = ?;
+    `, [idLibro]);
+    return rows;
+}
+
+export const getEjemplaresByLibroId = async (idLibro) => {
+    const [rows] = await db.query(`
+        SELECT Id_ejemplar
+        FROM tbl_ejemplares
+        WHERE Id_libro = ?;
+    `, [idLibro]);
+    return rows;
+}
 
 export const agregarLibro = async (libro) => {
     const { Id_libro, Titulo, Sinopsis, Edicion, Id_editorial, Id_autor, Id_genero, Id_anio_edicion, ISBN, Id_area_conocimiento, Imagen} = libro;
