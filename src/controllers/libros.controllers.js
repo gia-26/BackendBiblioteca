@@ -78,9 +78,8 @@ const agregarEditorialesSecundarias = async (editorialesSecundarias, nuevoId) =>
 }
 
 const agregarEjemplares = async (noEjemplares, nuevoIdLibro) => {
-    let nuevoIdEjemplar = await librosModel.crearNuevoIdEjemplar();
     for (let i = 1; i <= noEjemplares; i++) {
-        await librosModel.agregarEjemplar(`EJE${nuevoIdEjemplar.toString().padStart(3, '0')}`, nuevoIdLibro, i);
-        nuevoIdEjemplar++;
+        const nuevoIdEjemplar = await librosModel.crearNuevoIdEjemplar();
+        await librosModel.agregarEjemplar(nuevoIdEjemplar, nuevoIdLibro, i);
     }
 } 
