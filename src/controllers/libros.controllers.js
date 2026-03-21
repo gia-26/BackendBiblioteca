@@ -3,8 +3,18 @@ import * as librosModel from '../models/libros.models.js';
 export const getLibrosById = async (req, res) => {
     try {
         const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({ error: "ID requerido" });
+        }
+
+        const libroBase = await librosModel.getLibrosById(id);
+
+        if (!libroBase) {
+            return res.status(404).json({ error: "Libro no encontrado" });
+        }
         const libro = {
-            libro: await librosModel.getLibrosById(id),
+            ...libroBase,
             subgeneros: await librosModel.getSubgenerosByLibroId(id),
             coautores: await librosModel.getCouautoresByLibroId(id),
             editorialesSecundarias: await librosModel.getEditorialesSecundariasByLibroId(id),
