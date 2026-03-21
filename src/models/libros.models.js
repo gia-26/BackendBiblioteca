@@ -55,8 +55,7 @@ export const crearNuevoIdEjemplar = async () => {
         SELECT MAX(Id_ejemplarAI) AS maxId FROM tbl_ejemplares;
     `);
     const maxId = rows[0].maxId || 0;
-    const nuevoIdEjemplar = maxId + 1;
-    return `EJE${nuevoIdEjemplar.toString().padStart(3, '0')}`;
+    return maxId + 1;
 }
 
 export const agregarEjemplar = async (idLibro, idEjemplar, numEjemplar) => {
