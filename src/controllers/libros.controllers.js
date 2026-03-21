@@ -10,6 +10,17 @@ export const getLibrosById = async (req, res) => {
     }
 }
 
+export const getSubgenerosByLibroId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const subgeneros = await librosModel.getSubgenerosByLibroId(id);
+        res.json(subgeneros);
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 export const agregarLibro = async (req, res) => {
     try {
         const nuevoId = await librosModel.crearNuevoIdLibro();

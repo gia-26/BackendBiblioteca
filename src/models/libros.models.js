@@ -32,6 +32,17 @@ export const getLibrosById = async (id) => {
     return rows;
 }
 
+export const getSubgenerosByLibroId = async (idLibro) => {
+    const [rows] = await db.query(`
+        SELECT g.Id_genero, g.Nombre
+        FROM tbl_libros_generos	libGen
+        INNER JOIN tbl_generos g ON libGen.Id_genero = g.Id_genero
+        WHERE libGen.Id_libro = ?;
+    `, [idLibro]);
+    return rows;
+}
+
+
 export const agregarLibro = async (libro) => {
     const { Id_libro, Titulo, Sinopsis, Edicion, Id_editorial, Id_autor, Id_genero, Id_anio_edicion, ISBN, Id_area_conocimiento, Imagen} = libro;
     const [result] = await db.query(`
