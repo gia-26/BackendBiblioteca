@@ -4,7 +4,7 @@ export const getLibrosById = async (req, res) => {
     try {
         const { id } = req.params;
         const libro = {
-            ...(await librosModel.getLibrosById(id))[0],
+            ...(await librosModel.getLibrosById(id)),
             subgeneros: await librosModel.getSubgenerosByLibroId(id),
             coautores: await librosModel.getCouautoresByLibroId(id),
             editorialesSecundarias: await librosModel.getEditorialesSecundariasByLibroId(id),
