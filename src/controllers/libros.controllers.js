@@ -15,11 +15,13 @@ export const getLibrosById = async (req, res) => {
         }
 
         //Agregar subgeneros, coautores, editoriales secundarias y ejemplares al objeto libro
-        libroBase.subgeneros = await librosModel.getSubgenerosByLibroId(id);
-        libroBase.coautores = await librosModel.getCouautoresByLibroId(id);
-        libroBase.editorialesSecundarias = await librosModel.getEditorialesSecundariasByLibroId(id);
-        libroBase.ejemplares = await librosModel.getEjemplaresByLibroId(id);
-        
+        const libro = {
+            ...libroBase[0],
+            subgeneros: await librosModel.getSubgenerosByLibroId(id),
+            coautores: await librosModel.getCouautoresByLibroId(id),
+            editorialesSecundarias: await librosModel.getEditorialesSecundariasByLibroId(id),
+            ejemplares: await librosModel.getEjemplaresByLibroId(id)
+        }
         res.status(200).json(libro);
     } catch (error) {
         res.status(500).json({ error: error.message });
