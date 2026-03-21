@@ -48,7 +48,7 @@ app.use('/api/libros', librosRoutes);
 app.use('/api/historialPrestamos', historialPrestamosRoutes);
 app.use('/api/personal', personalRoutes);
 app.use('/api/informacion_biblioteca', bibliotecaRoutes);
-app.use("/generos", generosRoutes);
+app.use("/api/generos", generosRoutes);
 app.use('/api/anios', aniosRoutes);
 app.use('/api/areas', areasRoutes);
 app.use('/api/editoriales', editorialesRoutes);

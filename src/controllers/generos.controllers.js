@@ -11,13 +11,10 @@ export const getAllGeneros = async (req, res) => {
         res.status(200).json(generos);
 
     } catch (error) {
-
         res.status(500).json({
             error: error.message
         });
-
     }
-
 };
 
 
