@@ -20,6 +20,7 @@ import editorialesRoutes from './routes/editoriales.routes.js';
 import tipoUsuariosRoutes from './routes/tipo_usuarios.routes.js';
 import loginRoutes from './routes/login.routes.js';
 import tiposPrestamoRoutes from './routes/tipos_prestamo.routes.js';
+import perfilRoutes from './routes/perfil.routes.js';
 import autoresRoutes from './routes/autores.routes.js';
 
 
@@ -56,6 +57,7 @@ app.use('/api/editoriales', editorialesRoutes);
 app.use('/api/tipo_usuarios', tipoUsuariosRoutes);
 app.use('/api/login', loginRoutes);
 app.use('/api/tipos_prestamo', tiposPrestamoRoutes);
+app.use('/api/perfil', perfilRoutes);
 app.use('/api/autores', autoresRoutes);
 
 app.get('/',(req, res)=>{
