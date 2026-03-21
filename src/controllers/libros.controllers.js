@@ -53,7 +53,7 @@ export const agregarLibro = async (req, res) => {
         if (editorialesSecundarias) await agregarEditorialesSecundarias(editorialesSecundarias, nuevoId);
         if (noEjemplares) await agregarEjemplares(noEjemplares, nuevoId);
         
-        res.json({ success: true, message: 'Libro agregado exitosamente'});
+        res.status(201).json({ success: true, message: 'Libro agregado exitosamente'});
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
