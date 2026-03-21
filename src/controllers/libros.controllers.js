@@ -14,7 +14,6 @@ export const getLibrosById = async (req, res) => {
             return res.status(404).json({ error: "Libro no encontrado" });
         }
 
-        //Agregar subgeneros, coautores, editoriales secundarias y ejemplares al objeto libro
         const libro = {
             ...libroBase[0],
             subgeneros: await librosModel.getSubgenerosByLibroId(id),
@@ -22,6 +21,7 @@ export const getLibrosById = async (req, res) => {
             editorialesSecundarias: await librosModel.getEditorialesSecundariasByLibroId(id),
             ejemplares: await librosModel.getEjemplaresByLibroId(id)
         }
+        
         res.status(200).json(libro);
     } catch (error) {
         res.status(500).json({ error: error.message });
