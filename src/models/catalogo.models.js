@@ -104,3 +104,55 @@ export const getTotalLibros = async () => {
     `);
     return rows[0].total;
 }
+
+export const getCatalogoByIA = async (filtros = {}) => {
+    const { 
+        genero = null, 
+        autor = null, 
+        titulo = null, 
+        anio = null,
+        limit = 5,
+        offset = 0
+    } = filtros;
+    
+    const [rows] = await db.query(`
+        SELECT 
+            lib.Id_libro, 
+            lib.Titulo, 
+            aut.Nombre,
+            CASE 
+                WHEN CHAR_LENGTH(lib.Sinopsis) > 100 
+                THEN CONCAT(LEFT(lib.Sinopsis, 100), '...') 
+                ELSE lib.Sinopsis 
+            END AS Sinopsis, 
+            lib.Imagen, 
+            COUNT(DISTINCT ejem.Id_ejemplar) AS Ejemplares_Disponibles 
+        FROM tbl_libros lib 
+        INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor 
+        INNER JOIN tbl_generos gen ON lib.Id_genero = gen.Id_genero 
+        INNER JOIN tbl_anios_edicion ae ON lib.Id_anio_edicion = ae.Id_anio_edicion 
+        LEFT JOIN tbl_ejemplares ejem ON lib.Id_libro = ejem.Id_libro 
+            AND ejem.Id_estado_ejemplar IN (
+                SELECT Id_estado_ejemplar 
+                FROM tbl_estado_ejemplar 
+                WHERE Estado_ejemplar != 'Prestado'
+            )
+        WHERE lib.Estado != 0
+            AND (? IS NULL OR gen.Nombre LIKE ?)
+            AND (? IS NULL OR aut.Nombre LIKE ?)
+            AND (? IS NULL OR lib.Titulo LIKE ?)
+            AND (? IS NULL OR ae.Anio_edicion = ?)
+        GROUP BY lib.Id_libro, lib.Titulo, aut.Nombre, gen.Nombre, lib.Sinopsis, lib.Imagen
+        LIMIT ? OFFSET ?
+    `, 
+    [
+        genero, `%${genero}%`,
+        autor, `%${autor}%`,
+        titulo, `%${titulo}%`,
+        anio, anio,
+        parseInt(limit), 
+        parseInt(offset)
+    ]
+    );
+    return rows;
+}
