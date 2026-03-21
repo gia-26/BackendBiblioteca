@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as ctrl from '../controllers/perfil.controllers.js';
-import { verificarToken } from '../middlewares/auth.js';
+import { verificarToken } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
