@@ -1,9 +1,15 @@
 import * as librosModel from '../models/libros.models.js';
-import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
-import fetch from 'node-fetch';
+import cloudinary from 'cloudinary';
 
 dotenv.config();
+
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+});
+
 
 export const getLibrosById = async (req, res) => {
     try {
@@ -166,51 +172,13 @@ export const editarLibro = async (req, res) => {
 export const eliminarImagenAnterior = async (req, res) => {
     try {
         const publicIdAnterior = req.body.public_id;
-
-         // Parámetros a firmar
-        const paramsToSign = {
-            timestamp: Math.floor(Date.now() / 1000),
-            public_id: publicIdAnterior,
-        };
-
-        // Generar la firma con el SDK de Cloudinary
-        const signature = cloudinary.utils.api_sign_request(
-            paramsToSign,
-            process.env.API_SECRET
-        );
-
-        const url = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/image/destroy`;
-        
-        const data = new FormData();
-        data.append('public_id', publicIdAnterior);
-        data.append('api_key', process.env.API_KEY); 
-        data.append('timestamp', paramsToSign.timestamp);       
-        data.append('signature', signature);                    
-        data.append('invalidate', 'true'); 
-
-        console.log('public_id:', publicIdAnterior);  // Imprime el public_id para verificar
-        console.log('signature:', signature);  // Verifica que la firma sea correcta
-    
-        const response = await fetch(url, {
-            method: 'POST',
-            body: data
+        const result = await cloudinary.v2.uploader.destroy(publicIdAnterior, {
+            invalidate: true
         });
-
-        // Verifica si la respuesta es exitosa
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
-
-        // Intenta parsear la respuesta como JSON
-        const result = await response.json().catch(() => {
-            throw new Error('La respuesta no es JSON válido');
-        });
-
         if (result.result === 'ok') {
-            res.status(200).json({ success: true, message: 'Imagen anterior eliminada correctamente' });
+            res.status(200).json({ success: true, message: 'Imagen eliminada correctamente' });
         } else {
             res.status(500).json({ success: false, error: 'Error al borrar la imagen' });
-            console.log('Error al borrar la imagen', result);
         }
     } catch (error) {
         console.log('Error al borrar la imagen', error);
