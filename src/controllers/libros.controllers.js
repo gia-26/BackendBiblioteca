@@ -1,6 +1,7 @@
 import * as librosModel from '../models/libros.models.js';
 import dotenv from 'dotenv';
 import CryptoJS from 'crypto-js';
+import fetch from 'node-fetch';
 
 dotenv.config();
 
@@ -184,16 +185,25 @@ export const eliminarImagenAnterior = async (req, res) => {
             method: 'POST',
             body: data
         });
-        
-        const result = await response.json();
+
+        // Verifica si la respuesta es exitosa
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        // Intenta parsear la respuesta como JSON
+        const result = await response.json().catch(() => {
+            throw new Error('La respuesta no es JSON válido');
+        });
+
         if (result.result === 'ok') {
             res.status(200).json({ success: true, message: 'Imagen anterior eliminada correctamente' });
         } else {
             res.status(500).json({ success: false, error: 'Error al borrar la imagen' });
-            console.log('Error al borrar la imagen' + result);
+            console.log('Error al borrar la imagen', result);
         }
     } catch (error) {
-        console.log('Error al borrar la imagen' + error);
+        console.log('Error al borrar la imagen', error);
         res.status(500).json({ success: false, error: 'Error al eliminar la imagen anterior' });
     }
 };
