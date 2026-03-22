@@ -11,7 +11,8 @@ export const getLibrosById = async (id) => {
             lib.Id_genero,
             lib.ISBN,
             lib.Imagen,
-            lib.Id_anio_edicion
+            lib.Id_anio_edicion,
+            lib.Id_area_conocimiento
         FROM tbl_libros lib
         WHERE lib.Id_libro = ? AND lib.Estado != 0;
     `, [id]);
