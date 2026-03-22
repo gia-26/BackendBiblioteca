@@ -5,16 +5,15 @@ export const getLibrosById = async (req, res) => {
         const { id } = req.params;
 
         if (!id) {
-            return res.status(400).json({ error: "ID requerido" });
+            return res.status(400).json({ success: false, error: "ID requerido" });
         }
 
         const libroBase = await librosModel.getLibrosById(id);
 
         if (!libroBase) {
-            return res.status(404).json({ error: "Libro no encontrado" });
+            return res.status(404).json({ success: false, error: "Libro no encontrado" });
         }
 
-        //Agregar subgeneros, coautores, editoriales secundarias y ejemplares al objeto libro
         const libro = {
             ...libroBase[0],
             subgeneros: await librosModel.getSubgenerosByLibroId(id),
@@ -22,9 +21,10 @@ export const getLibrosById = async (req, res) => {
             editorialesSecundarias: await librosModel.getEditorialesSecundariasByLibroId(id),
             ejemplares: await librosModel.getEjemplaresByLibroId(id)
         }
-        res.status(200).json(libro);
+
+        res.status(200).json({ success: true, data: libro });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ success: false, error: error.message });
     }
 }
 
@@ -47,7 +47,7 @@ export const agregarLibro = async (req, res) => {
         const urlImagen = req.body.urlImagen;
 
         if (!titulo || !isbn || !edicion || !anioEdicion || !areaConocimiento || !generoPrincipal || !autorPrincipal || !editorialPrincipal || !sinopsis || !noEjemplares || !urlImagen) {
-            return res.status(400).json({ error: 'Faltan campos obligatorios' });
+            return res.status(400).json({ success: false, error: 'Faltan campos obligatorios' });
         }
         
         const id = await librosModel.agregarLibro({
@@ -64,7 +64,7 @@ export const agregarLibro = async (req, res) => {
             Imagen: urlImagen
         });
 
-        if (!id) return res.status(500).json({ error: 'Error al agregar el libro' }); 
+        if (!id) return res.status(500).json({ success: false, error: 'Error al agregar el libro' }); 
         
         if (subgeneros) await agregarSubgeneros(subgeneros, nuevoId);
         if (coautores) await agregarCoautores(coautores, nuevoId);
@@ -74,7 +74,7 @@ export const agregarLibro = async (req, res) => {
         res.status(201).json({ success: true, message: 'Libro agregado exitosamente'});
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ success: false, error: error.message });
     }
 }
 

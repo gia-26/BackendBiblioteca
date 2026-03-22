@@ -6,26 +6,13 @@ export const getLibrosById = async (id) => {
             lib.Titulo,
             lib.Sinopsis,
             lib.Edicion,
-
-            (SELECT aut.Nombre
-                FROM tbl_autores aut
-                WHERE aut.Id_autor = lib.Id_autor) AS Autor,
-
-            (SELECT edit.Nombre
-                FROM tbl_editoriales edit
-                WHERE edit.Id_editorial = lib.Id_editorial) AS Editorial,
-
-            (SELECT gen.Nombre
-                FROM tbl_generos gen
-                WHERE gen.Id_genero = lib.Id_genero) AS Genero,
-
+            lib.Id_autor,
+            lib.Id_editorial,
+            lib.Id_genero,
             lib.ISBN,
             lib.Imagen,
-
-            (SELECT anios.Anio_edicion
-                FROM tbl_anios_edicion anios
-                WHERE anios.Id_anio_edicion = lib.Id_anio_edicion) AS Anio
-
+            lib.Id_anio_edicion,
+            lib.Id_area_conocimiento
         FROM tbl_libros lib
         WHERE lib.Id_libro = ? AND lib.Estado != 0;
     `, [id]);
