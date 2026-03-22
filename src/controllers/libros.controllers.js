@@ -1,4 +1,8 @@
 import * as librosModel from '../models/libros.models.js';
+import dotenv from 'dotenv';
+const CryptoJS = require('crypto-js');
+
+dotenv.config();
 
 export const getLibrosById = async (req, res) => {
     try {
@@ -157,3 +161,38 @@ export const editarLibro = async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 }
+
+// Función para generar la firma
+function generateSignature(data, publicId) {
+    const signature = `public_id=${publicId}&timestamp=${data.get('timestamp')}${process.env.API_SECRET}`;
+    return CryptoJS.MD5(signature).toString(CryptoJS.enc.Base64);
+}
+
+export const eliminarImagenAnterior = async (req, res) => {
+    try {
+        const publicIdAnterior = req.body.public_id;
+
+        const url = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/destroy`;
+        
+        const data = new FormData();
+        data.append('public_id', publicIdAnterior);
+        data.append('api_key', process.env.API_KEY);
+        data.append('timestamp', Math.floor(Date.now() / 1000));
+        data.append('signature', generateSignature(data, publicIdAnterior));
+    
+        const response = await fetch(url, {
+            method: 'POST',
+            body: data
+        });
+        
+        const result = await response.json();
+        if (result.result === 'ok') {
+            res.status(200).json({ success: true, message: 'Imagen anterior eliminada correctamente' });
+        } else {
+            res.status(500).json({ success: false, error: 'Error al borrar la imagen' });
+            console.error('Error al borrar la imagen', result);
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, error: 'Error al eliminar la imagen anterior' });
+    }
+};

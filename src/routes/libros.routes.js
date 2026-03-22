@@ -9,4 +9,6 @@ router.post('/agregar', ctrl.agregarLibro)
 
 router.put('/editar', ctrl.editarLibro)
 
+router.delete('/eliminar/imagen', ctrl.eliminarImagenAnterior)
+
 export default router;
