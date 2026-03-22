@@ -165,8 +165,18 @@ export const editarLibro = async (req, res) => {
 
 // Función para generar la firma
 function generateSignature(data, publicId) {
-    const signature = `public_id=${publicId}&timestamp=${data.get('timestamp')}${process.env.API_SECRET}`;
-    return CryptoJS.MD5(signature).toString(CryptoJS.enc.Base64);
+    // Primero, obtenemos los parámetros necesarios
+    const timestamp = data.get('timestamp');
+    const apiKey = process.env.API_KEY;
+    const apiSecret = process.env.API_SECRET;
+
+    // Concatenamos todos los parámetros, en el orden correcto
+    const signatureString = `api_key=${apiKey}&public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+
+    // Generamos la firma utilizando MD5 y la codificamos en Base64
+    const signature = CryptoJS.MD5(signatureString).toString(CryptoJS.enc.Base64);
+
+    return signature;
 }
 
 export const eliminarImagenAnterior = async (req, res) => {
