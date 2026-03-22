@@ -173,7 +173,7 @@ export const eliminarImagenAnterior = async (req, res) => {
     try {
         const publicIdAnterior = req.body.public_id;
 
-        const url = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/destroy`;
+        const url = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/image/destroy`;
         
         const data = new FormData();
         data.append('public_id', publicIdAnterior);
