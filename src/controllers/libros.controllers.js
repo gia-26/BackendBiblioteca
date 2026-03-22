@@ -180,6 +180,9 @@ export const eliminarImagenAnterior = async (req, res) => {
         data.append('api_key', process.env.API_KEY);
         data.append('timestamp', Math.floor(Date.now() / 1000));
         data.append('signature', generateSignature(data, publicIdAnterior));
+
+        console.log('public_id:', publicIdAnterior);  // Imprime el public_id para verificar
+        console.log('signature:', generateSignature(data, publicIdAnterior));  // Verifica que la firma sea correcta
     
         const response = await fetch(url, {
             method: 'POST',
