@@ -1,6 +1,6 @@
 import * as librosModel from '../models/libros.models.js';
+import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
-import CryptoJS from 'crypto-js';
 import fetch from 'node-fetch';
 
 dotenv.config();
@@ -163,36 +163,33 @@ export const editarLibro = async (req, res) => {
     }
 }
 
-// Función para generar la firma
-function generateSignature(data, publicId) {
-    // Primero, obtenemos los parámetros necesarios
-    const timestamp = data.get('timestamp');
-    const apiKey = process.env.API_KEY;
-    const apiSecret = process.env.API_SECRET;
-
-    // Concatenamos todos los parámetros, en el orden correcto
-    const signatureString = `api_key=${apiKey}&public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
-
-    // Generamos la firma utilizando MD5 y la codificamos en Base64
-    const signature = CryptoJS.MD5(signatureString).toString(CryptoJS.enc.Base64);
-
-    return signature;
-}
-
 export const eliminarImagenAnterior = async (req, res) => {
     try {
         const publicIdAnterior = req.body.public_id;
+
+         // Parámetros a firmar
+        const paramsToSign = {
+            timestamp: Math.floor(Date.now() / 1000),
+            public_id: publicIdAnterior,
+        };
+
+        // Generar la firma con el SDK de Cloudinary
+        const signature = cloudinary.utils.api_sign_request(
+            paramsToSign,
+            process.env.API_SECRET
+        );
 
         const url = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/image/destroy`;
         
         const data = new FormData();
         data.append('public_id', publicIdAnterior);
-        data.append('api_key', process.env.API_KEY);
-        data.append('timestamp', Math.floor(Date.now() / 1000));
-        data.append('signature', generateSignature(data, publicIdAnterior));
+        data.append('api_key', process.env.API_KEY); 
+        data.append('timestamp', paramsToSign.timestamp);       
+        data.append('signature', signature);                    
+        data.append('invalidate', 'true'); 
 
         console.log('public_id:', publicIdAnterior);  // Imprime el public_id para verificar
-        console.log('signature:', generateSignature(data, publicIdAnterior));  // Verifica que la firma sea correcta
+        console.log('signature:', signature);  // Verifica que la firma sea correcta
     
         const response = await fetch(url, {
             method: 'POST',
