@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import * as perfilModels from '../models/perfil.models.js';
 
-// CORREGIDO - pasa sesion al model
+//CORREGIDO - pasa sesion al model
 export const getPerfil = async (req, res) => {
     try {
         const { idUsuario } = req.params;
@@ -14,7 +14,7 @@ export const getPerfil = async (req, res) => {
     }
 };
 
-// CORREGIDO - pasa sesion al model
+//CORREGIDO - pasa sesion al model
 export const updateTelefono = async (req, res) => {
     try {
         const { idUsuario, telefono } = req.body;
