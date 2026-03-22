@@ -1,11 +1,12 @@
 import bcrypt from 'bcryptjs';
 import * as perfilModels from '../models/perfil.models.js';
 
-// GET perfil (teléfono)
+// CORREGIDO - pasa sesion al model
 export const getPerfil = async (req, res) => {
     try {
         const { idUsuario } = req.params;
-        const data = await perfilModels.getTelefono(idUsuario);
+        const sesion = req.usuario.rol;
+        const data = await perfilModels.getTelefono(idUsuario, sesion);
         if (!data) return res.status(404).json({ message: 'Usuario no encontrado' });
         res.json(data);
     } catch (error) {
@@ -13,11 +14,12 @@ export const getPerfil = async (req, res) => {
     }
 };
 
-// PUT teléfono
+// CORREGIDO - pasa sesion al model
 export const updateTelefono = async (req, res) => {
     try {
         const { idUsuario, telefono } = req.body;
-        const ok = await perfilModels.updateTelefono(idUsuario, telefono);
+        const sesion = req.usuario.rol;
+        const ok = await perfilModels.updateTelefono(idUsuario, sesion, telefono);
         if (!ok) return res.status(400).json({ message: 'No se pudo actualizar el teléfono' });
         res.json({ success: true, message: 'Teléfono actualizado' });
     } catch (error) {
@@ -25,12 +27,9 @@ export const updateTelefono = async (req, res) => {
     }
 };
 
-// PUT contraseña
 export const updatePassword = async (req, res) => {
     try {
         const { idUsuario, passwordActual, passwordNueva } = req.body;
-
-        // El rol viene del token JWT
         const sesion = req.usuario.rol;
 
         const datos = await perfilModels.getPasswordHash(idUsuario, sesion);
