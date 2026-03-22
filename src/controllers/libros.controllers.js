@@ -190,9 +190,10 @@ export const eliminarImagenAnterior = async (req, res) => {
             res.status(200).json({ success: true, message: 'Imagen anterior eliminada correctamente' });
         } else {
             res.status(500).json({ success: false, error: 'Error al borrar la imagen' });
-            console.error('Error al borrar la imagen', result);
+            console.log('Error al borrar la imagen' + result);
         }
     } catch (error) {
+        console.log('Error al borrar la imagen' + error);
         res.status(500).json({ success: false, error: 'Error al eliminar la imagen anterior' });
     }
 };
