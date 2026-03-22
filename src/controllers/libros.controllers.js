@@ -1,6 +1,6 @@
 import * as librosModel from '../models/libros.models.js';
 import dotenv from 'dotenv';
-const CryptoJS = require('crypto-js');
+import CryptoJS from 'crypto-js';
 
 dotenv.config();
 
