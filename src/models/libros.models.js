@@ -67,6 +67,16 @@ export const agregarLibro = async (libro) => {
     return result.insertId;
 }
 
+export const editarLibro = async (libro) => {
+    const { Id_libro, Titulo, Sinopsis, Edicion, Id_editorial, Id_autor, Id_genero, Id_anio_edicion, ISBN, Id_area_conocimiento, Imagen} = libro;
+    const [result] = await db.query(`
+        UPDATE tbl_libros
+        SET Titulo = ?, Sinopsis = ?, Edicion = ?, Id_editorial = ?, Id_autor = ?, Id_genero = ?, Id_anio_edicion = ?, ISBN = ?, Id_area_conocimiento = ?, Imagen = ?
+        WHERE Id_libro = ?;
+    `, [Titulo, Sinopsis, Edicion, Id_editorial, Id_autor, Id_genero, Id_anio_edicion, ISBN, Id_area_conocimiento, Imagen, Id_libro]);
+    return result.affectedRows > 0;
+}
+
 export const crearNuevoIdLibro = async () => {
     const [rows] = await db.query(`
         SELECT MAX(Id_libroAI) AS maxId FROM tbl_libros;
@@ -96,6 +106,27 @@ export const agregarSubgenero = async (idLibro, idGenero) => {
         INSERT INTO tbl_libros_generos (Id_genero, Id_libro)
         VALUES (?, ?);
     `, [idGenero, idLibro]);
+}
+
+export const eliminarSubgeneros = async (idLibro) => {
+    await db.query(`
+        DELETE FROM tbl_libros_generos
+        WHERE Id_libro = ?;
+    `, [idLibro]);
+}
+
+export const eliminarCoautores = async (idLibro) => {
+    await db.query(`
+        DELETE FROM tbl_coautores
+        WHERE Id_libro = ?;
+    `, [idLibro]);
+}
+
+export const eliminarEditorialesSecundarias = async (idLibro) => {
+    await db.query(`
+        DELETE FROM tbl_libros_editoriales
+        WHERE Id_libro = ?;
+    `, [idLibro]);
 }
 
 export const agregarCoautor = async (idLibro, idAutor) => {

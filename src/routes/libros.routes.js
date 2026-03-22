@@ -7,4 +7,6 @@ router.get('/:id', ctrl.getLibrosById);
 
 router.post('/agregar', ctrl.agregarLibro)
 
+router.put('/editar', ctrl.editarLibro)
+
 export default router;

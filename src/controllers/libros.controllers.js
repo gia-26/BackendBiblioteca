@@ -102,4 +102,58 @@ const agregarEjemplares = async (noEjemplares, nuevoIdLibro) => {
         await librosModel.agregarEjemplar(nuevoIdLibro, `EJE${nuevoIdEjemplar.toString().padStart(3, '0')}`, i);
         nuevoIdEjemplar++;
     }
-} 
+}
+
+export const editarLibro = async (req, res) => {
+    try {
+        const idLibro = req.body.idLibro;
+        const titulo = req.body.titulo;
+        const isbn = req.body.isbn;
+        const edicion = req.body.edicion;
+        const anioEdicion = req.body.anioEdicion;
+        const areaConocimiento = req.body.areaConocimiento;
+        const generoPrincipal = req.body.generoPrincipal;
+        const subgeneros = Array.from(req.body.subgeneros) || [];
+        const autorPrincipal = req.body.autorPrincipal;
+        const coautores = Array.from(req.body.coautores) || [];
+        const editorialPrincipal = req.body.editorialPrincipal;
+        const editorialesSecundarias = Array.from(req.body.editorialesSecundarias) || [];
+        const sinopsis = req.body.sinopsis;
+        const noEjemplares = req.body.noEjemplares;
+        const urlImagen = req.body.url;
+
+        if (!idLibro || !titulo || !isbn || !edicion || !anioEdicion || !areaConocimiento || !generoPrincipal || !autorPrincipal || !editorialPrincipal || !sinopsis || !urlImagen) {
+            return res.status(400).json({ success: false, error: 'Faltan campos obligatorios' });
+        }
+
+        const libroEditado = await librosModel.editarLibro({
+            Id_libro: idLibro,
+            Titulo: titulo,
+            Sinopsis: sinopsis,
+            Edicion: edicion,
+            Id_editorial: editorialPrincipal,
+            Id_autor: autorPrincipal,
+            Id_genero: generoPrincipal,
+            Id_anio_edicion: anioEdicion,
+            ISBN: isbn,
+            Id_area_conocimiento: areaConocimiento,
+            Imagen: urlImagen
+        });
+
+        if (!libroEditado) return res.status(500).json({ success: false, error: 'Error al editar el libro' });
+
+        await librosModel.eliminarSubgeneros(idLibro);
+        await librosModel.eliminarCoautores(idLibro);
+        await librosModel.eliminarEditorialesSecundarias(idLibro);
+
+
+        if (subgeneros) await agregarSubgeneros(subgeneros, idLibro);
+        if (coautores) await agregarCoautores(coautores, idLibro);
+        if (editorialesSecundarias) await agregarEditorialesSecundarias(editorialesSecundarias, idLibro);
+        if (noEjemplares || noEjemplares !== 0) await agregarEjemplares(noEjemplares, idLibro);
+
+        res.status(200).json({ success: true, message: 'Libro editado exitosamente' });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+}
