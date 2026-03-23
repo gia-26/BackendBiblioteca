@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as ctrl from "../controllers/usuarios.controllers.js";
+import { verificarToken } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
@@ -9,14 +10,14 @@ router.get('/todos', ctrl.getAllUsuarios);
 router.put('/editar/password', ctrl.editPasswordUsuario);
 
 // Obtener todas las multas del usuario logueado
-router.get('/', ctrl.getMultasByUsuario);
+router.get('/', verificarToken, ctrl.getMultasByUsuario);
 
 // Obtener resumen (monto total)
-router.get('/resumen', ctrl.getResumenMultas);
+router.get('/resumen', verificarToken,ctrl.getResumenMultas);
 
 // historial de prestamos
-router.get('/usuario/estadisticas', ctrl.getEstadisticasUsuario);
-router.get('/usuario/mis-prestamos', ctrl.getPrestamosUsuario);
+router.get('/usuario/estadisticas', verificarToken,ctrl.getEstadisticasUsuario);
+router.get('/usuario/mis-prestamos', verificarToken, ctrl.getPrestamosUsuario);
 
 
 export default router;
