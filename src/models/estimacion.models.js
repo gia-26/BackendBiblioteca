@@ -16,4 +16,6 @@ export const getAllLibrosEstimaciones = async () => {
         GROUP BY lib.Id_libro, lib.Titulo
         ORDER BY lib.Titulo ASC;   
     `);
+
+    return rows;
 }
