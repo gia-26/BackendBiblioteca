@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as ctrl from "../controllers/estimacion.controller.js";
+import * as ctrl from "../controllers/estimacion.controllers.js";
 
 const router = Router();
 
