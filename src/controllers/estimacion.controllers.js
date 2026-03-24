@@ -16,6 +16,7 @@ export const getDatosLibro = async (req, res) => {
         
         console.log('ID del libro:', idLibro);
         console.log('Fecha proporcionada:', fecha);
+        console.log(await estimacionModels.getPrimeraVezPrestado(idLibro, fecha));
 
         // Sumar 4 días y mantener formato YYYY-MM-DD
         const fechaDia1 = await estimacionModels.getPrimeraVezPrestado(idLibro, fecha);
