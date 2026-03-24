@@ -30,7 +30,7 @@ export const getDia1 = async (idLibro, fecha) => {
         AND p.Fecha_prestamo = ?;
     `, [idLibro, fecha]);
 
-    return rows;
+    return rows[0];
 }
 
 export const getDia4 = async (idLibro, fecha) => {
@@ -44,5 +44,5 @@ export const getDia4 = async (idLibro, fecha) => {
         AND p.Fecha_prestamo = ?;
     `, [idLibro, fecha]);
 
-    return rows;
+    return rows[0];
 }
