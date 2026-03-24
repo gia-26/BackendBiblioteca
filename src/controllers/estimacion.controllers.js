@@ -19,6 +19,7 @@ export const getDatosLibro = async (req, res) => {
 
         // Sumar 4 días y mantener formato YYYY-MM-DD
         const fechaDia1 = await estimacionModels.getPrimeraVezPrestado(idLibro, fecha);
+        console.log('Fecha de primera vez prestado:', fechaDia1.primera_vez_prestado);
         const fechaInicial = new Date(fechaDia1.primera_vez_prestado);
 
         fechaInicial.setDate(fechaInicial.getDate() + 4);
