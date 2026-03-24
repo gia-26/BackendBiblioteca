@@ -19,6 +19,18 @@ export const getAllLibrosEstimaciones = async () => {
     return rows;
 }
 
+export const getPrimeraVezPrestado = async (idLibro, fecha) => {
+    const [rows] = await db.query(`
+        SELECT 
+            MIN(p.Fecha_prestamo) AS primera_vez_prestado
+        FROM tbl_prestamos p
+        INNER JOIN tbl_ejemplares e ON p.Id_ejemplar = e.Id_ejemplar
+        INNER JOIN tbl_libros lib ON lib.Id_libro = e.Id_libro
+        WHERE e.Id_libro = ? AND p.Fecha_prestamo >= ?;
+    `, [idLibro, fecha]);
+    return rows[0];
+}
+
 export const getDia1 = async (idLibro, fecha) => {
     const [rows] = await db.query(`
         SELECT 
