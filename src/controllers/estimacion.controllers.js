@@ -25,7 +25,7 @@ export const getDatosLibro = async (req, res) => {
         const dia1 = await estimacionModels.getDia1(idLibro, fechaDia1.toISOString().split('T')[0]);
         const dia4 = await estimacionModels.getDia4(idLibro, fechaDia4);
         
-        res.status(200).json({ dia1, dia4 });
+        res.status(200).json({ prestamosDia1: dia1, prestamosDia4: dia4 });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
