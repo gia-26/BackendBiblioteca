@@ -16,6 +16,33 @@ export const getAllLibrosEstimaciones = async () => {
         GROUP BY lib.Id_libro, lib.Titulo
         ORDER BY COUNT(p.Id_prestamo) DESC;    
     `);
+    return rows;
+}
+
+export const getDia1 = async (idLibro, fecha) => {
+    const [rows] = await db.query(`
+        SELECT 
+            COUNT(*) AS prestamos_dia_1
+        FROM tbl_prestamos p
+        INNER JOIN tbl_ejemplares e ON p.Id_ejemplar = e.Id_ejemplar
+        INNER JOIN tbl_libros lib ON lib.Id_libro = e.Id_libro
+        WHERE e.Id_libro = ?
+        AND p.Fecha_prestamo = ?;
+    `, [idLibro, fecha]);
+
+    return rows;
+}
+
+export const getDia4 = async (idLibro, fecha) => {
+    const [rows] = await db.query(`
+        SELECT 
+            COUNT(*) AS prestamos_dia_4
+        FROM tbl_prestamos p
+        INNER JOIN tbl_ejemplares e ON p.Id_ejemplar = e.Id_ejemplar
+        INNER JOIN tbl_libros lib ON lib.Id_libro = e.Id_libro
+        WHERE e.Id_libro = ?
+        AND p.Fecha_prestamo = ?;
+    `, [idLibro, fecha]);
 
     return rows;
 }
