@@ -7,13 +7,23 @@ export const getLibrosById = async (id) => {
             lib.Sinopsis,
             lib.Edicion,
             lib.Id_autor,
+            a.Nombre AS 'Autor',
             lib.Id_editorial,
+            e.Nombre AS 'Editorial',
             lib.Id_genero,
+            g.Nombre AS 'Genero',
             lib.ISBN,
             lib.Imagen,
             lib.Id_anio_edicion,
-            lib.Id_area_conocimiento
+            ae.Anio_edicion AS 'Anio',
+            lib.Id_area_conocimiento,
+            ac.Area_conocimiento
         FROM tbl_libros lib
+        INNER JOIN tbl_autores a ON lib.Id_autor = a.Id_autor
+        INNER JOIN tbl_editoriales e ON lib.Id_editorial = e.Id_editorial
+        INNER JOIN tbl_generos g ON lib.Id_genero = g.Id_genero
+        INNER JOIN tbl_anios_edicion ae ON lib.Id_anio_edicion = ae.Id_anio_edicion
+        INNER JOIN tbl_areas_conocimiento ac ON lib.Id_area_conocimiento = ac.Id_area_conocimiento
         WHERE lib.Id_libro = ? AND lib.Estado != 0;
     `, [id]);
     return rows;
