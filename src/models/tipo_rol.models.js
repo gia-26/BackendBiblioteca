@@ -2,7 +2,7 @@ import db from '../config/db.js';
 
 // Obtener todos los roles
 export const getAllRoles = async () => {
-    const [rows] = await db.query('SELECT * FROM tbl_roles ORDER BY Nombre ASC');
+    const [rows] = await db.query('SELECT * FROM tbl_roles ORDER BY Tipo_rol ASC');
     return rows;
 };
 
@@ -23,7 +23,7 @@ const generarNuevoId = async () => {
 export const createRol = async (nombre) => {
     const nuevoId = await generarNuevoId();
     await db.query(
-        'INSERT INTO tbl_roles (Id_rol, Nombre) VALUES (?, ?)',
+        'INSERT INTO tbl_roles (Id_rol, Tipo_rol) VALUES (?, ?)',
         [nuevoId, nombre]
     );
     return { id: nuevoId };
@@ -32,7 +32,7 @@ export const createRol = async (nombre) => {
 // Editar rol
 export const updateRol = async (id, nombre) => {
     await db.query(
-        'UPDATE tbl_roles SET Nombre = ? WHERE Id_rol = ?',
+        'UPDATE tbl_roles SET Tipo_rol = ? WHERE Id_rol = ?',
         [nombre, id]
     );
     return { updated: true };
