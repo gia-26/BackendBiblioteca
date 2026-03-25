@@ -1,54 +1,81 @@
 import db from '../config/db.js';
 
-// Obtener todos los roles
 export const getAllRoles = async () => {
-    const [rows] = await db.query('SELECT * FROM tbl_roles ORDER BY Tipo_rol ASC');
-    return rows;
-};
-
-// Generar ID autoincremental (ROL001, ROL002...)
-const generarNuevoId = async () => {
-    const [rows] = await db.query(
-        'SELECT Id_rol FROM tbl_roles ORDER BY Id_rol DESC LIMIT 1'
-    );
-    if (rows.length > 0) {
-        const ultimo = rows[0].Id_rol;
-        const num = parseInt(ultimo.substring(3)) + 1;
-        return 'ROL' + String(num).padStart(3, '0');
+    try {
+        // Ajusta los nombres de las columnas según tu tabla
+        const [rows] = await db.query('SELECT Id_rol, Nombre FROM tbl_roles ORDER BY Nombre ASC');
+        return rows;
+    } catch (error) {
+        console.error('Error en getAllRoles:', error);
+        throw error;
     }
-    return 'ROL001';
 };
 
-// Agregar rol
+const generarNuevoId = async () => {
+    try {
+        const [rows] = await db.query(
+            'SELECT Id_rol FROM tbl_roles ORDER BY Id_rol DESC LIMIT 1'
+        );
+        if (rows.length > 0) {
+            const ultimo = rows[0].Id_rol;
+            const num = parseInt(ultimo.substring(3)) + 1;
+            return 'ROL' + String(num).padStart(3, '0');
+        }
+        return 'ROL001';
+    } catch (error) {
+        console.error('Error en generarNuevoId:', error);
+        return 'ROL001';
+    }
+};
+
 export const createRol = async (nombre) => {
-    const nuevoId = await generarNuevoId();
-    await db.query(
-        'INSERT INTO tbl_roles (Id_rol, Tipo_rol) VALUES (?, ?)',
-        [nuevoId, nombre]
-    );
-    return { id: nuevoId };
+    try {
+        const nuevoId = await generarNuevoId();
+        await db.query(
+            'INSERT INTO tbl_roles (Id_rol, Nombre) VALUES (?, ?)',
+            [nuevoId, nombre]
+        );
+        return { id: nuevoId };
+    } catch (error) {
+        console.error('Error en createRol:', error);
+        throw error;
+    }
 };
 
-// Editar rol
 export const updateRol = async (id, nombre) => {
-    await db.query(
-        'UPDATE tbl_roles SET Tipo_rol = ? WHERE Id_rol = ?',
-        [nombre, id]
-    );
-    return { updated: true };
+    try {
+        await db.query(
+            'UPDATE tbl_roles SET Nombre = ? WHERE Id_rol = ?',
+            [nombre, id]
+        );
+        return { updated: true };
+    } catch (error) {
+        console.error('Error en updateRol:', error);
+        throw error;
+    }
 };
 
-// Eliminar rol
 export const deleteRol = async (id) => {
-    await db.query('DELETE FROM tbl_roles WHERE Id_rol = ?', [id]);
-    return { deleted: true };
+    try {
+        await db.query('DELETE FROM tbl_roles WHERE Id_rol = ?', [id]);
+        return { deleted: true };
+    } catch (error) {
+        console.error('Error en deleteRol:', error);
+        throw error;
+    }
 };
 
-// Verificar si el rol está asignado a algún usuario
 export const rolEstaAsignado = async (id) => {
-    const [rows] = await db.query(
-        'SELECT COUNT(*) as total FROM tbl_usuarios WHERE Id_rol = ?',
-        [id]
-    );
-    return rows[0].total > 0;
+    try {
+        // Verificar en qué tabla se usa el Id_rol
+        // Puede ser en tbl_usuarios, tbl_trabajadores, o tbl_personal
+        const [rows] = await db.query(
+            'SELECT COUNT(*) as total FROM tbl_usuarios WHERE Id_rol = ?',
+            [id]
+        );
+        return rows[0].total > 0;
+    } catch (error) {
+        console.error('Error en rolEstaAsignado:', error);
+        return false;
+    }
 };
