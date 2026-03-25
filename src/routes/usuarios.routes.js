@@ -16,8 +16,8 @@ router.get('/', verificarToken, ctrl.getMultasByUsuario);
 router.get('/resumen', verificarToken,ctrl.getResumenMultas);
 
 // historial de prestamos
-router.get('/usuario/estadisticas', verificarToken,ctrl.getEstadisticasUsuario);
-router.get('/usuario/mis-prestamos', verificarToken, ctrl.getPrestamosUsuario);
+router.get('/usuario/estadisticas',ctrl.getEstadisticasUsuario);
+router.get('/usuario/mis-prestamos',ctrl.getPrestamosUsuario);
 
 
 export default router;
