@@ -15,7 +15,7 @@ export const getCatalogo = async (limit, skip) => {
         FROM tbl_libros lib
         INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor
         LEFT JOIN tbl_ejemplares ej ON lib.Id_libro = ej.Id_libro 
-            AND ej.Id_estado_ejemplar != 'EE002'
+        AND ej.Id_estado_ejemplar != 'EE002'
         WHERE lib.Estado != 0
         GROUP BY lib.Id_libro
         LIMIT ? OFFSET ?;  
@@ -98,13 +98,11 @@ export const getCatalogoAutor = async (autor, limit, skip) => {
 
 export const getTotalLibros = async () => {
     const [rows] = await db.query(`
-        SELECT COUNT(DISTINCT lib.Id_libro) as total
-            FROM tbl_ejemplares ejem
-            INNER JOIN tbl_libros lib ON ejem.Id_libro = lib.Id_libro
-            INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor
-            LEFT JOIN tbl_ejemplares ejem ON lib.Id_libro = ejem.Id_libro 
-            AND ejem.Id_estado_ejemplar != 'EE002'
-            WHERE lib.Estado != 0 AND ejem.Id_ejemplar IS NOT NULL;
+        SELECT COUNT(DISTINCT lib.Id_libro) AS total
+        FROM tbl_libros lib
+        LEFT JOIN tbl_ejemplares ej ON lib.Id_libro = ej.Id_libro 
+            AND ej.Id_estado_ejemplar != 'EE002'
+        WHERE lib.Estado != 0;
     `);
     return rows[0].total;
 }
