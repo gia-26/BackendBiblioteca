@@ -77,7 +77,7 @@ export const getResumenMultas = async (req, res) => {
 
 export const getEstadisticasUsuario = async (req, res) => {
   try {
-    const idUsuario = req.usuario.id; // ← usar ID del token
+    const idUsuario = req.params.id // ← usar ID del token
     const data = await prestamosModel.getEstadisticasUsuario(idUsuario);
     res.status(200).json(data);
   } catch (error) {
@@ -87,7 +87,7 @@ export const getEstadisticasUsuario = async (req, res) => {
 
 export const getPrestamosUsuario = async (req, res) => {
   try {
-    const idUsuario = req.usuario.id; // ← usar ID del token
+    const idUsuario = req.params.id // ← usar ID del token
     const prestamos = await prestamosModel.getPrestamosUsuario(idUsuario);
     res.status(200).json(prestamos);
   } catch (error) {
