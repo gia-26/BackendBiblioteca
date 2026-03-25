@@ -1,5 +1,6 @@
 import * as generosModels from "../models/generos.models.js";
 
+
 export const getAllGeneros = async (req, res) => {
     try {
         const generos = await generosModels.getAllGeneros();
@@ -8,6 +9,7 @@ export const getAllGeneros = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 export const agregarGenero = async (req, res) => {
     try {
@@ -24,6 +26,7 @@ export const editarGenero = async (req, res) => {
         const { Id_genero, Nombre } = req.body;
         const result = await generosModels.updateGenero(Id_genero, Nombre);
         res.status(200).json(result);
+
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -43,6 +46,7 @@ export const eliminarGenero = async (req, res) => {
 
         const result = await generosModels.deleteGenero(Id_genero);
         res.status(200).json(result);
+
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

@@ -2,6 +2,7 @@ import db from '../config/db.js';
 
 // Obtener todos los géneros
 export const getAllGeneros = async () => {
+
     const [rows] = await db.query('SELECT * FROM tbl_generos ORDER BY Nombre ASC');
     return rows;
 };
@@ -42,13 +43,4 @@ export const updateGenero = async (id, nombre) => {
 export const deleteGenero = async (id) => {
     await db.query('DELETE FROM tbl_generos WHERE Id_genero = ?', [id]);
     return { deleted: true };
-};
-
-// Verificar si el género está asignado a algún libro
-export const generoEstaAsignado = async (id) => {
-    const [rows] = await db.query(
-        'SELECT COUNT(*) as total FROM tbl_libros WHERE Id_genero = ?',
-        [id]
-    );
-    return rows[0].total > 0;
 };
