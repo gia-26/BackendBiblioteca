@@ -26,9 +26,12 @@ export const getCatalogo = async (req, res) => {
 
 export const getCatalogoByBusqueda = async (req, res) => {
     try {
-        let limit = req.query.limit || 50, skip = req.query.skip || 0, resultado, total = 0;
+        let limit = req.query.limit, skip = req.query.skip, resultado, total = 0;
         const tipo = req.query.tipo;
         const q = req.query.q;
+
+        if (limit && isNaN(parseInt(limit))) limit = 50;
+        if (skip && isNaN(parseInt(skip))) skip = 0;
 
         if (!tipo) res.status(400).json({ error: 'Tipo inválido' });
         if (!q) res.status(400).json({ error: 'Búsqueda incompleta' }); 
