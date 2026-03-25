@@ -15,8 +15,8 @@ export const getCatalogo = async (limit, skip) => {
             FROM tbl_ejemplares ejem
             INNER JOIN tbl_libros lib ON ejem.Id_libro = lib.Id_libro
             INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor
-            INNER JOIN tbl_estado_ejemplar estEjem ON ejem.Id_estado_ejemplar = estEjem.Id_estado_ejemplar
-            WHERE lib.Estado != 0 AND estEjem.Estado_ejemplar != 'Prestado'
+            LEFT JOIN tbl_estado_ejemplar estEjem ON ejem.Id_estado_ejemplar = estEjem.Id_estado_ejemplar AND estEjem.Estado_ejemplar != 'Prestado'
+            WHERE lib.Estado != 0
             GROUP BY lib.Id_libro
             LIMIT ? OFFSET ?;    
     `, [limit, skip]);
@@ -38,7 +38,7 @@ export const getCatalogoByTitulo = async (titulo, limit, skip) => {
             FROM tbl_ejemplares ejem
             INNER JOIN tbl_libros lib ON ejem.Id_libro = lib.Id_libro
             INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor
-            INNER JOIN tbl_estado_ejemplar estEjem ON ejem.Id_estado_ejemplar = estEjem.Id_estado_ejemplar
+            LEFT JOIN tbl_estado_ejemplar estEjem ON ejem.Id_estado_ejemplar = estEjem.Id_estado_ejemplar AND estEjem.Estado_ejemplar != 'Prestado'
             WHERE lib.Estado != 0 AND estEjem.Estado_ejemplar != 'Prestado' AND lib.Titulo LIKE ?
             GROUP BY lib.Id_libro
             LIMIT ? OFFSET ?;    
@@ -61,7 +61,7 @@ export const getCatalogoByGenero = async (genero, limit, skip) => {
             FROM tbl_ejemplares ejem
             INNER JOIN tbl_libros lib ON ejem.Id_libro = lib.Id_libro
             INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor
-            INNER JOIN tbl_estado_ejemplar estEjem ON ejem.Id_estado_ejemplar = estEjem.Id_estado_ejemplar
+            LEFT JOIN tbl_estado_ejemplar estEjem ON ejem.Id_estado_ejemplar = estEjem.Id_estado_ejemplar AND estEjem.Estado_ejemplar != 'Prestado'
             INNER JOIN tbl_generos gen ON lib.Id_genero = gen.Id_genero 
             WHERE lib.Estado != 0 AND estEjem.Estado_ejemplar != 'Prestado' AND gen.Nombre LIKE ?
             GROUP BY lib.Id_libro
@@ -85,7 +85,7 @@ export const getCatalogoAutor = async (autor, limit, skip) => {
             FROM tbl_ejemplares ejem
             INNER JOIN tbl_libros lib ON ejem.Id_libro = lib.Id_libro
             INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor
-            INNER JOIN tbl_estado_ejemplar estEjem ON ejem.Id_estado_ejemplar = estEjem.Id_estado_ejemplar
+            LEFT JOIN tbl_estado_ejemplar estEjem ON ejem.Id_estado_ejemplar = estEjem.Id_estado_ejemplar AND estEjem.Estado_ejemplar != 'Prestado'
             WHERE lib.Estado != 0 AND estEjem.Estado_ejemplar != 'Prestado' AND aut.Nombre LIKE ?
             GROUP BY lib.Id_libro
             LIMIT ? OFFSET ?;    
