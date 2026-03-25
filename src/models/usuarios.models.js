@@ -155,8 +155,9 @@ export const getPrestamosUsuario = async (idUsuario) => {
         ELSE 'Desconocido'
       END AS estado
     FROM tbl_prestamos p
-    INNER JOIN tbl_ejemplares e ON p.Id_ejemplar = e.Id_ejemplar
+    INNER JOIN tbl_ejemplares e ON p.Id_ejemplar = e.Id_ejemplar  
     INNER JOIN tbl_libros l ON e.Id_libro = l.Id_libro
+    INNER JOIN tbl_autores a ON a.Id_autor = l.Id_autor
     WHERE p.Id_usuario = ?
   `, [idUsuario]);
 
