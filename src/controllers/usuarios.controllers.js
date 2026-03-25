@@ -47,8 +47,7 @@ export const getAllTiposUsuario = async (req, res) => {
 export const getMultasByUsuario = async (req, res) => {
   try {
 
-    //  Aquí puedes cambiar después para usar sesión real
-    const idUsuario = req.usuario?.id || 'ALU001';
+   const idUsuario = req.usuario.id; // ← ya no hardcodeado
 
     const multas = await usuariosModels.getMultasByUsuario(idUsuario);
 
@@ -63,7 +62,9 @@ export const getMultasByUsuario = async (req, res) => {
 export const getResumenMultas = async (req, res) => {
   try {
 
-    const resumen = await usuariosModels.getResumenMultas();
+     const idUsuario = req.usuario.id; // ← usar el ID del token
+
+    const resumen = await usuariosModels.getResumenMultas(idUsuario);
 
     res.status(200).json(resumen);
 

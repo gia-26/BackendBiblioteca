@@ -32,6 +32,15 @@ export const editarArea = async (req, res) => {
 export const eliminarArea = async (req, res) => {
     try {
         const { Id_area_conocimiento } = req.body;
+
+        //Verificar si está asignada a algún libro
+        const asignada = await area_conocimientoModel.areaEstaAsignada(Id_area_conocimiento);
+        if (asignada) {
+            return res.status(400).json({
+                error: "Esta área de conocimiento no se puede eliminar porque está asignada a uno o más libros."
+            });
+        }
+
         const result = await area_conocimientoModel.deleteArea(Id_area_conocimiento);
         res.status(200).json(result);
     } catch (error) {

@@ -4,7 +4,7 @@ export const getCatalogo = async (req, res) => {
     try {
         let limit, skip;
         if (!req.query.limit || !req.query.skip) {
-            limit = 5;
+            limit = 50;
             skip = 0;
         }
         else {
@@ -26,9 +26,12 @@ export const getCatalogo = async (req, res) => {
 
 export const getCatalogoByBusqueda = async (req, res) => {
     try {
-        let limit = req.query.limit || 5, skip = req.query.skip || 0, resultado, total = 0;
+        let limit = req.query.limit, skip = req.query.skip, resultado, total = 0;
         const tipo = req.query.tipo;
         const q = req.query.q;
+
+        if (!limit || isNaN(parseInt(limit))) limit = 50;
+        if (!skip || isNaN(parseInt(skip))) skip = 0;
 
         if (!tipo) res.status(400).json({ error: 'Tipo inválido' });
         if (!q) res.status(400).json({ error: 'Búsqueda incompleta' }); 
@@ -61,3 +64,38 @@ export const getCatalogoByBusqueda = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+export const getCatalogoAvanzado = async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 50;
+        const skip = parseInt(req.query.skip) || 0;
+        
+        const filtros = {
+            genero: req.query.genero || null,
+            autor: req.query.autor || null,
+            titulo: req.query.titulo || null,
+            anio: req.query.anio || null
+        };
+
+        // Verificar si hay al menos un filtro
+        if (!filtros.genero && !filtros.autor && !filtros.titulo && !filtros.anio) {
+            return res.status(400).json({ 
+                error: 'Se requiere al menos un filtro de búsqueda' 
+            });
+        }
+
+        const resultados = await catalogoModels.getCatalogoByIA(filtros);
+        
+        const catalogo = {
+            libros: resultados,
+            total: resultados.length,
+            limit: limit,
+            skip: skip
+        };
+
+        res.status(200).json(catalogo);
+    } catch (error) {
+        console.error('Error en getCatalogoAvanzado:', error);
+        res.status(500).json({ error: error.message });
+    }
+};

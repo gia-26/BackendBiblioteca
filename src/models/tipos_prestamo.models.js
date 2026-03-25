@@ -19,19 +19,19 @@ const generarNuevoId = async () => {
     return 'TP001';
 };
 
-export const createTipoPrestamo = async (nombre) => {
+export const createTipoPrestamo = async (tipoPrestamo) => { 
     const nuevoId = await generarNuevoId();
     await db.query(
         'INSERT INTO tbl_tipos_prestamos (Id_tipo_prestamo, Tipo_prestamo) VALUES (?, ?)',
-        [nuevoId, nombre]
+        [nuevoId, tipoPrestamo]  
     );
     return { id: nuevoId };
 };
 
-export const updateTipoPrestamo = async (id, nombre) => {
+export const updateTipoPrestamo = async (id, tipoPrestamo) => { 
     await db.query(
         'UPDATE tbl_tipos_prestamos SET Tipo_prestamo = ? WHERE Id_tipo_prestamo = ?',
-        [nombre, id]
+        [tipoPrestamo, id] 
     );
     return { updated: true };
 };

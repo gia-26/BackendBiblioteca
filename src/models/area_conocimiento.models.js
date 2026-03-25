@@ -48,3 +48,12 @@ export const deleteArea = async (id) => {
     );
     return { deleted: true };
 };
+
+// Verificar si el área está asignada a algún libro
+export const areaEstaAsignada = async (id) => {
+    const [rows] = await db.query(
+        'SELECT COUNT(*) as total FROM tbl_libros WHERE Id_area_conocimiento = ?',
+        [id]
+    );
+    return rows[0].total > 0;
+};

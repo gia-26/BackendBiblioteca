@@ -35,3 +35,12 @@ export const deleteAnio = async (id) => {
     await db.query('DELETE FROM tbl_anios_edicion WHERE Id_anio_edicion = ?', [id]);
     return { deleted: true };
 };
+
+// Verificar si el año está asignado a algún libro
+export const anioEstaAsignado = async (id) => {
+    const [rows] = await db.query(
+        'SELECT COUNT(*) as total FROM tbl_libros WHERE Id_anio_edicion = ?',
+        [id]
+    );
+    return rows[0].total > 0;
+};

@@ -45,18 +45,25 @@ export const getAllUsuarios = async () => {
 
 export const getUsuariosById = async ({id, tipo}) => {
     if (tipo === 'TU001') {
-      const [rows] = await db.query('SELECT Nombre, Id_alumno AS id FROM tbl_alumnos WHERE Id_alumno = ?', [id]);
+      const [rows] = await db.query(`
+        SELECT 
+          CONCAT(a.Nombre, " ", a.Apellido_P, " ", a.Apellido_M) AS NombreCompleto,
+          c.Nombre_carrera AS Carrera
+        FROM tbl_alumnos a
+        INNER JOIN tbl_carreras c ON a.Id_carrera = c.Id_carrera
+        WHERE a.Id_alumno = ?
+      `, [id]);
       return rows[0];
     }
     else if (tipo === 'TU002') {
-      const [rows] = await db.query('SELECT Nombre, Id_trabajador AS id FROM tbl_trabajadores WHERE Id_trabajador = ?', [id]);
+      const [rows] = await db.query(`
+        SELECT 
+          CONCAT(t.Nombre, " ", t.Apellido_P, " ", t.Apellido_M) AS NombreCompleto
+        FROM tbl_trabajadores t
+        WHERE t.Id_trabajador = ?
+      `, [id]);
       return rows[0];
     }
-}
-
-export const getAllTiposUsuario = async () => {
-  const [rows] = await db.query(`SELECT * FROM tbl_tipo_usuarios`);
-  return rows;
 }
 
 // Obtener lista de multas del usuario
@@ -85,13 +92,15 @@ export const getMultasByUsuario = async (idUsuario) => {
 };
 
 // Obtener resumen
-export const getResumenMultas = async () => {
+export const getResumenMultas = async (idUsuario) => {
 
   const [rows] = await db.query(`
     SELECT 
-      IFNULL(SUM(Monto),0) AS MontoTotal
-    FROM tbl_multas
-  `);
+      IFNULL(SUM(m.Monto),0) AS MontoTotal
+    FROM tbl_multas m
+    INNER JOIN tbl_prestamos pres ON m.Id_prestamo = pres.Id_prestamo
+    WHERE pres.Id_usuario = ?
+  `, [idUsuario]);
 
   return rows[0];
 };
