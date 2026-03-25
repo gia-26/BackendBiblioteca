@@ -52,7 +52,7 @@ export const getUsuariosById = async ({id, tipo}) => {
     if (tipo === 'TU001') {
       const [rows] = await db.query(`
         SELECT
-          a.Id_alumno,
+          a.Id_alumno AS 'Id_usuario',
           CONCAT(a.Nombre, " ", a.Apellido_P, " ", a.Apellido_M) AS NombreCompleto,
           c.Nombre_carrera AS Carrera
         FROM tbl_alumnos a
@@ -64,7 +64,7 @@ export const getUsuariosById = async ({id, tipo}) => {
     else if (tipo === 'TU002') {
       const [rows] = await db.query(`
         SELECT
-          t.Id_trabajador,
+          t.Id_trabajador AS 'Id_usuario',
           CONCAT(t.Nombre, " ", t.Apellido_P, " ", t.Apellido_M) AS NombreCompleto
         FROM tbl_trabajadores t
         WHERE t.Id_trabajador = ?
