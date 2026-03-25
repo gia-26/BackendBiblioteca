@@ -74,11 +74,10 @@ export const getResumenMultas = async (req, res) => {
 };
 
 // historial de prestamos
-
 export const getEstadisticasUsuario = async (req, res) => {
   try {
-    const idUsuario = req.params.id // ← usar ID del token
-    const data = await prestamosModel.getEstadisticasUsuario(idUsuario);
+    const idUsuario = req.params.id 
+    const data = await usuariosModels.getEstadisticasUsuario(idUsuario);
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -87,8 +86,8 @@ export const getEstadisticasUsuario = async (req, res) => {
 
 export const getPrestamosUsuario = async (req, res) => {
   try {
-    const idUsuario = req.params.id // ← usar ID del token
-    const prestamos = await prestamosModel.getPrestamosUsuario(idUsuario);
+    const idUsuario = req.params.id
+    const prestamos = await usuariosModels.getPrestamosUsuario(idUsuario);
     res.status(200).json(prestamos);
   } catch (error) {
     res.status(500).json({ error: error.message });
