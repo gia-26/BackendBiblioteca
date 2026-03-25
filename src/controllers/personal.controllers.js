@@ -6,9 +6,9 @@ export const getPersonalById = async (req, res) => {
         const id = req.params.id;
         const personal = await personalModel.getAllPersonalById(id);
         if (!personal) return res.status(404).json({ message: 'Personal no encontrado' });
-        res.status(200).json({ success: true, personal });
+        res.status(200).json(personal);
     } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        res.status(500).json({ error: error.message });
     }
 }
 
