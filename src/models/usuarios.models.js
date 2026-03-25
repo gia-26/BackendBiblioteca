@@ -1,5 +1,10 @@
 import db from '../config/db.js';
 
+export const getAllTiposUsuario = async () => {
+  const [rows] = await db.query('SELECT Id_tipo_usuario, Tipo_usuario FROM tbl_tipo_usuarios');
+  return rows;
+}
+
 export const createUsuario = async (idUsuario, idTipoUsuario, passwordHash) => {
     const [result] = await db.query(
         'INSERT INTO tbl_usuarios(Id_usuario, Id_tipo_usuario, Password, Estado) VALUES (?, ?, ?, ?)',
