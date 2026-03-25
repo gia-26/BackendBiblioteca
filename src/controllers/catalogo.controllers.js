@@ -4,7 +4,7 @@ export const getCatalogo = async (req, res) => {
     try {
         let limit, skip;
         if (!req.query.limit || !req.query.skip) {
-            limit = 5;
+            limit = 50;
             skip = 0;
         }
         else {
@@ -26,7 +26,7 @@ export const getCatalogo = async (req, res) => {
 
 export const getCatalogoByBusqueda = async (req, res) => {
     try {
-        let limit = req.query.limit || 5, skip = req.query.skip || 0, resultado, total = 0;
+        let limit = req.query.limit || 50, skip = req.query.skip || 0, resultado, total = 0;
         const tipo = req.query.tipo;
         const q = req.query.q;
 
@@ -64,7 +64,7 @@ export const getCatalogoByBusqueda = async (req, res) => {
 
 export const getCatalogoAvanzado = async (req, res) => {
     try {
-        const limit = parseInt(req.query.limit) || 5;
+        const limit = parseInt(req.query.limit) || 50;
         const skip = parseInt(req.query.skip) || 0;
         
         const filtros = {
