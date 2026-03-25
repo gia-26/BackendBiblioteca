@@ -1,4 +1,4 @@
-import * as rolesModels from "../models/roles.models.js";
+import * as rolesModels from "../models/tipo_rol.models.js";
 
 export const getAllRoles = async (req, res) => {
     try {
