@@ -10,6 +10,22 @@ cloudinary.v2.config({
     api_secret: process.env.API_SECRET
 });
 
+export const eliminarLibro = async (req, res) => {
+    try {
+        const idLibro = req.params.idLibro;
+        if (!idLibro) return res.status(400).json({ success: false, error: 'ID del libro requerido' });
+        
+        await librosModel.eliminarLibro(idLibro);
+        await librosModel.eliminarEjemplaresLibro(idLibro);
+        await librosModel.eliminarSubgeneros(idLibro);
+        await librosModel.eliminarCoautores(idLibro);
+        await librosModel.eliminarEditorialesSecundarias(idLibro);
+        res.status(200).json({ success: true, message: 'Libro eliminado exitosamente' });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+}
+
 export const getAllLibros = async (req, res) => {
     try {
         const libros = await librosModel.getAllLibros();

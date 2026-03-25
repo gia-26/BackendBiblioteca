@@ -16,6 +16,42 @@ export const getAllLibros = async () => {
     return rows;
 }
 
+export const eliminarLibro = async (idLibro) => {
+    await db.query(`
+        UPDATE tbl_libros
+        SET Estado = 0
+        WHERE Id_libro = ?;
+    `, [idLibro]);
+}
+
+export const eliminarEjemplaresLibro = async (idLibro) => {
+    await db.query(`
+        DELETE FROM tbl_ejemplares
+        WHERE Id_libro = ?;
+    `, [idLibro]);
+}
+
+export const eliminarSubgeneros = async (idLibro) => {
+    await db.query(`
+        DELETE FROM tbl_libros_generos
+        WHERE Id_libro = ?;
+    `, [idLibro]);
+}
+
+export const eliminarCoautores = async (idLibro) => {
+    await db.query(`
+        DELETE FROM tbl_coautores
+        WHERE Id_libro = ?;
+    `, [idLibro]);
+}
+
+export const eliminarEditorialesSecundarias = async (idLibro) => {
+    await db.query(`
+        DELETE FROM tbl_libros_editoriales
+        WHERE Id_libro = ?;
+    `, [idLibro]);
+}
+
 export const getLibrosById = async (id) => {
     const [rows] = await db.query(`
         SELECT
@@ -132,27 +168,6 @@ export const agregarSubgenero = async (idLibro, idGenero) => {
         INSERT INTO tbl_libros_generos (Id_genero, Id_libro)
         VALUES (?, ?);
     `, [idGenero, idLibro]);
-}
-
-export const eliminarSubgeneros = async (idLibro) => {
-    await db.query(`
-        DELETE FROM tbl_libros_generos
-        WHERE Id_libro = ?;
-    `, [idLibro]);
-}
-
-export const eliminarCoautores = async (idLibro) => {
-    await db.query(`
-        DELETE FROM tbl_coautores
-        WHERE Id_libro = ?;
-    `, [idLibro]);
-}
-
-export const eliminarEditorialesSecundarias = async (idLibro) => {
-    await db.query(`
-        DELETE FROM tbl_libros_editoriales
-        WHERE Id_libro = ?;
-    `, [idLibro]);
 }
 
 export const agregarCoautor = async (idLibro, idAutor) => {
