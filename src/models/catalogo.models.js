@@ -57,16 +57,16 @@ export const getCatalogoByGenero = async (genero, limit, skip) => {
                 ELSE lib.Sinopsis
             END AS Sinopsis,
             lib.Imagen,
-            COUNT(ejem.Id_ejemplar) AS Ejemplares_Disponibles
-            FROM tbl_ejemplares ejem
-            INNER JOIN tbl_libros lib ON ejem.Id_libro = lib.Id_libro
-            INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor
-            LEFT JOIN tbl_ejemplares ejem ON lib.Id_libro = ejem.Id_libro 
-            AND ejem.Id_estado_ejemplar != 'EE002'
-            INNER JOIN tbl_generos gen ON lib.Id_genero = gen.Id_genero 
-            WHERE lib.Estado != 0 AND estEjem.Estado_ejemplar != 'Prestado' AND gen.Nombre LIKE ?
-            GROUP BY lib.Id_libro
-            LIMIT ? OFFSET ?;    
+            COUNT(ej.Id_ejemplar) AS Ejemplares_Disponibles
+        FROM tbl_libros lib
+        INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor
+        INNER JOIN tbl_generos gen ON lib.Id_genero = gen.Id_genero
+        LEFT JOIN tbl_ejemplares ej ON lib.Id_libro = ej.Id_libro
+            AND ej.Id_estado_ejemplar != 'EE002'
+        WHERE lib.Estado != 0 
+            AND gen.Nombre LIKE ?
+        GROUP BY lib.Id_libro
+        LIMIT ? OFFSET ?;    
     `, [`%${genero}%`, limit, skip]);
     return [rows, rows.length || 0];
 }
@@ -82,15 +82,15 @@ export const getCatalogoAutor = async (autor, limit, skip) => {
                 ELSE lib.Sinopsis
             END AS Sinopsis,
             lib.Imagen,
-            COUNT(ejem.Id_ejemplar) AS Ejemplares_Disponibles
-            FROM tbl_ejemplares ejem
-            INNER JOIN tbl_libros lib ON ejem.Id_libro = lib.Id_libro
-            INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor
-            LEFT JOIN tbl_ejemplares ejem ON lib.Id_libro = ejem.Id_libro 
-            AND ejem.Id_estado_ejemplar != 'EE002'
-            WHERE lib.Estado != 0 AND aut.Nombre LIKE ?
-            GROUP BY lib.Id_libro
-            LIMIT ? OFFSET ?;    
+            COUNT(ej.Id_ejemplar) AS Ejemplares_Disponibles
+        FROM tbl_libros lib
+        INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor
+        LEFT JOIN tbl_ejemplares ej ON lib.Id_libro = ej.Id_libro
+            AND ej.Id_estado_ejemplar != 'EE002'
+        WHERE lib.Estado != 0 
+            AND aut.Nombre LIKE ?
+        GROUP BY lib.Id_libro
+        LIMIT ? OFFSET ?;   
     `, [`%${autor}%`, limit, skip]);
     return [rows, rows.length || 0];
 }
