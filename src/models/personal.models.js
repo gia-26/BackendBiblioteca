@@ -30,8 +30,8 @@ export const getAllPersonalById = async (id) => {
         FROM tbl_personal AS pers
         INNER JOIN tbl_trabajadores trab ON trab.Id_trabajador = pers.Id_trabajador
         INNER JOIN tbl_roles rols ON rols.Id_rol = pers.Id_rol
-        WHERE pers.Id_personal = ?
-    `, [id]);
+        WHERE pers.Id_personal LIKE ?
+    `, [`%${id}%`]);
     return rows;
 };
 
