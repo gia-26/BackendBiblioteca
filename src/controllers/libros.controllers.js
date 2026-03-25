@@ -10,6 +10,14 @@ cloudinary.v2.config({
     api_secret: process.env.API_SECRET
 });
 
+export const getAllLibros = async (req, res) => {
+    try {
+        const libros = await librosModel.getAllLibros();
+        res.status(200).json({ success: true, data: libros });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+}
 
 export const getLibrosById = async (req, res) => {
     try {
