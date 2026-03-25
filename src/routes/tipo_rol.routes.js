@@ -1,4 +1,4 @@
-import * as ctrl from "../controllers/roles.controllers.js";
+import * as ctrl from "../controllers/tipo_rol.controllers.js";
 import { Router } from "express";
 
 const router = Router();
