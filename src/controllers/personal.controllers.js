@@ -1,6 +1,17 @@
 import bcrypt from 'bcryptjs';
 import * as personalModel from '../models/personal.models.js';
 
+export const getPersonalById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const personal = await personalModel.getAllPersonalById(id);
+        if (!personal) return res.status(404).json({ message: 'Personal no encontrado' });
+        res.status(200).json({ success: true, personal });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+}
+
 export const getAllPersonal = async (req, res) => {
     try {
         const personal = await personalModel.getAllPersonal();
