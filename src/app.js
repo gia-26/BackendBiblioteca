@@ -22,6 +22,7 @@ import tiposPrestamoRoutes from './routes/tipos_prestamo.routes.js';
 import perfilRoutes from './routes/perfil.routes.js';
 import autoresRoutes from './routes/autores.routes.js';
 import estimacionRoutes from './routes/estimacion.routes.js';
+import rolesRoutes from './routes/tipo_rol.routes.js';
 
 
 //Creamos el objeto de express para nuestra aplicación
@@ -59,6 +60,7 @@ app.use('/api/tipos_prestamo', tiposPrestamoRoutes);
 app.use('/api/perfil', perfilRoutes);
 app.use('/api/autores', autoresRoutes);
 app.use('/api/estimaciones', estimacionRoutes);
+app.use('/api/tipo_rol', rolesRoutes);
 
 app.get('/',(req, res)=>{
     res.send("Esto es mi primer API desde express... publicada en vercel...");
