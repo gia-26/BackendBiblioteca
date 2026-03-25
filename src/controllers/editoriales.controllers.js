@@ -32,6 +32,15 @@ export const editarEditorial = async (req, res) => {
 export const eliminarEditorial = async (req, res) => {
     try {
         const { Id_editorial } = req.body;
+
+        //Verificar si está asignada a algún libro
+        const asignada = await editorialesModel.editorialEstaAsignada(Id_editorial);
+        if (asignada) {
+            return res.status(400).json({
+                error: "Esta editorial no se puede eliminar porque está asignada a uno o más libros."
+            });
+        }
+
         const result = await editorialesModel.deleteEditorial(Id_editorial);
         res.status(200).json(result);
     } catch (error) {
