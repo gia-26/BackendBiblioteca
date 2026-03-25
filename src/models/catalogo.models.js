@@ -14,11 +14,11 @@ export const getCatalogo = async (limit, skip) => {
             COUNT(ej.Id_ejemplar) AS Ejemplares_Disponibles
         FROM tbl_libros lib
         INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor
-        LEFT JOIN tbl_ejemplares ej ON lib.Id_libro = ej.Id_libro 
-        AND ej.Id_estado_ejemplar != 'EE002'
+        LEFT JOIN tbl_ejemplares ej ON lib.Id_libro = ej.Id_libro
+            AND ej.Id_estado_ejemplar != 'EE002'
         WHERE lib.Estado != 0
         GROUP BY lib.Id_libro
-        LIMIT ? OFFSET ?;  
+        LIMIT ? OFFSET ?;
     `, [limit, skip]);
     return rows;
 }
