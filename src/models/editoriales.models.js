@@ -48,3 +48,12 @@ export const deleteEditorial = async (id) => {
     );
     return { deleted: true };
 };
+
+// Verificar si la editorial está asignada a algún libro
+export const editorialEstaAsignada = async (id) => {
+    const [rows] = await db.query(
+        'SELECT COUNT(*) as total FROM tbl_libros WHERE Id_editorial = ?',
+        [id]
+    );
+    return rows[0].total > 0;
+};
