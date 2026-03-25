@@ -144,21 +144,21 @@ export const getEstadisticasUsuario = async (idUsuario) => {
 
 export const getPrestamosUsuario = async (idUsuario) => {
   const [rows] = await db.query(`
-    SELECT 
-      p.*, 
-      l.Titulo AS titulo,
-      l.Id_autor AS autor,
-      CASE 
-        WHEN p.Id_estado_prestamo = 'EP001' THEN 'Activo'
-        WHEN p.Id_estado_prestamo = 'EP002' THEN 'Entregado'
-        WHEN p.Id_estado_prestamo = 'EP003' THEN 'Expirado'
-        ELSE 'Desconocido'
-      END AS estado
-    FROM tbl_prestamos p
-    INNER JOIN tbl_ejemplares e ON p.Id_ejemplar = e.Id_ejemplar  
-    INNER JOIN tbl_libros l ON e.Id_libro = l.Id_libro
-    INNER JOIN tbl_autores a ON a.Id_autor = l.Id_autor
-    WHERE p.Id_usuario = ?
+  SELECT 
+    p.*, 
+    l.Titulo AS titulo,
+    a.Nombre AS autor,
+    CASE 
+      WHEN p.Id_estado_prestamo = 'EP001' THEN 'Activo'
+      WHEN p.Id_estado_prestamo = 'EP002' THEN 'Entregado'
+      WHEN p.Id_estado_prestamo = 'EP003' THEN 'Expirado'
+      ELSE 'Desconocido'
+    END AS estado
+  FROM tbl_prestamos p
+  INNER JOIN tbl_ejemplares e ON p.Id_ejemplar = e.Id_ejemplar
+  INNER JOIN tbl_libros l ON e.Id_libro = l.Id_libro
+  INNER JOIN tbl_autores a ON l.Id_autor = a.Id_autor
+  WHERE p.Id_usuario = ?
   `, [idUsuario]);
 
   return rows;
