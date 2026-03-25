@@ -39,7 +39,7 @@ export const getCatalogoByTitulo = async (titulo, limit, skip) => {
         INNER JOIN tbl_autores aut ON lib.Id_autor = aut.Id_autor
         LEFT JOIN tbl_ejemplares ej ON lib.Id_libro = ej.Id_libro
             AND ej.Id_estado_ejemplar != 'EE002'
-        WHERE lib.Estado != 0
+        WHERE lib.Estado != 0 AND lib.Titulo LIKE ?
         GROUP BY lib.Id_libro
         LIMIT ? OFFSET ?;    
     `, [`%${titulo}%`, limit, skip]);
