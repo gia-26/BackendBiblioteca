@@ -147,7 +147,7 @@ export const getPrestamosUsuario = async (idUsuario) => {
     SELECT 
       p.*, 
       l.Titulo AS titulo,
-      l.Autor AS autor,
+      l.autor AS autor,
       CASE 
         WHEN p.Id_estado_prestamo = 'EP001' THEN 'Activo'
         WHEN p.Id_estado_prestamo = 'EP002' THEN 'Entregado'
