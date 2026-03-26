@@ -84,7 +84,7 @@ export const guardarPersonal = async (req, res) => {
 export const generarIdPersonal = async (req, res) => {
     try {
         const idPersonal = await personalModel.generarId();
-        res.status(200).json({ id: idPersonal });
+        res.status(200).json(idPersonal);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
