@@ -12,7 +12,8 @@ export const getAllPersonal = async () => {
             rols.Id_rol
         FROM tbl_personal AS pers
         INNER JOIN tbl_trabajadores trab ON trab.Id_trabajador = pers.Id_trabajador
-        INNER JOIN tbl_roles rols ON rols.Id_rol = pers.Id_rol;   
+        INNER JOIN tbl_roles rols ON rols.Id_rol = pers.Id_rol
+        WHERE pers.Estado != 0;   
     `);
     return rows;
 }
@@ -30,7 +31,7 @@ export const getAllPersonalById = async (id) => {
         FROM tbl_personal AS pers
         INNER JOIN tbl_trabajadores trab ON trab.Id_trabajador = pers.Id_trabajador
         INNER JOIN tbl_roles rols ON rols.Id_rol = pers.Id_rol
-        WHERE pers.Id_personal LIKE ?
+        WHERE pers.Id_personal LIKE ? AND pers.Estado != 0;
     `, [`%${id}%`]);
     return rows;
 };
