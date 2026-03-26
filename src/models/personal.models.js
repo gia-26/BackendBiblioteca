@@ -68,7 +68,7 @@ export const guardarPersonal = async (Id_personal, Id_trabajador, Id_rol, Passwo
 
 export const generarIdPersonal = async () => {
     const [rows] = await db.query(`
-        SELECT MAX(Id_personal) AS maxId FROM tbl_personal;
+        SELECT MAX(Id_personalAI) AS maxId FROM tbl_personal;
     `);
     const maxId = rows[0].maxId || 0;
     const nuevoId = maxId + 1;
