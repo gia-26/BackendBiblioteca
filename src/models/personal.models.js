@@ -66,7 +66,7 @@ export const guardarPersonal = async (Id_personal, Id_trabajador, Id_rol, Passwo
     return result.insertId;
 }
 
-export const generarIdPersonal = async () => {
+export const generarId = async () => {
     const [rows] = await db.query(`
         SELECT MAX(Id_personalAI) AS maxId FROM tbl_personal;
     `);

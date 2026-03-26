@@ -69,7 +69,7 @@ export const guardarPersonal = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
         
-        const Id_personal = await personalModel.generarIdPersonal();
+        const Id_personal = await personalModel.generarId();
         
         const guardado = await personalModel.guardarPersonal(Id_personal, id_trabajador, id_rol, passwordHash);
         
@@ -83,7 +83,7 @@ export const guardarPersonal = async (req, res) => {
 
 export const generarIdPersonal = async (req, res) => {
     try {
-        const idPersonal = await personalModel.generarIdPersonal();
+        const idPersonal = await personalModel.generarId();
         res.status(200).json({ id: idPersonal });
     } catch (error) {
         res.status(500).json({ error: error.message });
