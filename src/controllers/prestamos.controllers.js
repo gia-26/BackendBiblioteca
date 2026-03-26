@@ -61,3 +61,16 @@ export const devolverPrestamo = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 }
+
+export const renovarPrestamo = async (req, res) => {
+  try {
+    const idPrestamo = req.body.idPrestamo;
+    const idUsuario = req.body.idUsuario;
+    const result = await prestamosModel.renovarPrestamo(idPrestamo, idUsuario);
+    console.log("RESULTADO CONTROLADOR:", result);
+    res.status(200).json(result);
+  }
+  catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}

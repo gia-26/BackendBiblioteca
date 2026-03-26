@@ -1,5 +1,5 @@
-import * as ctrl from "../controllers/roles.controllers.js";
 import { Router } from "express";
+import * as ctrl from "../controllers/tipo_rol.controllers.js";
 
 const router = Router();
 

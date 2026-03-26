@@ -12,7 +12,8 @@ export const getAllPersonal = async () => {
             rols.Id_rol
         FROM tbl_personal AS pers
         INNER JOIN tbl_trabajadores trab ON trab.Id_trabajador = pers.Id_trabajador
-        INNER JOIN tbl_roles rols ON rols.Id_rol = pers.Id_rol;   
+        INNER JOIN tbl_roles rols ON rols.Id_rol = pers.Id_rol
+        WHERE pers.Estado != 0;   
     `);
     return rows;
 }
@@ -30,7 +31,7 @@ export const getAllPersonalById = async (id) => {
         FROM tbl_personal AS pers
         INNER JOIN tbl_trabajadores trab ON trab.Id_trabajador = pers.Id_trabajador
         INNER JOIN tbl_roles rols ON rols.Id_rol = pers.Id_rol
-        WHERE pers.Id_personal LIKE ?
+        WHERE pers.Id_personal LIKE ? AND pers.Estado != 0;
     `, [`%${id}%`]);
     return rows;
 };
@@ -49,3 +50,28 @@ export const editUsuarioPassword = async (idUsuario, passwordHash) => {
     );
     return result.affectedRows > 0;
 };
+
+export const eliminarPersonal = async (idPersonal) => {
+    const [result] = await db.query(
+        'UPDATE tbl_personal SET Estado = 0 WHERE Id_personal = ?',
+        [idPersonal]
+    );
+    return result.affectedRows > 0;
+}
+
+export const guardarPersonal = async (Id_personal, Id_trabajador, Id_rol, Password) => {
+    const [result] = await db.query(
+        'INSERT INTO tbl_personal (Id_personal, Id_trabajador, Password, Id_rol, Estado) VALUES (?, ?, ?, ?, ?)',
+        [Id_personal, Id_trabajador, Password, Id_rol, 1]
+    );
+    return result.insertId;
+}
+
+export const generarId = async () => {
+    const [rows] = await db.query(`
+        SELECT MAX(Id_personalAI) AS maxId FROM tbl_personal;
+    `);
+    const maxId = rows[0].maxId || 0;
+    const nuevoId = maxId + 1;
+    return `PER${nuevoId.toString().padStart(3, '0')}`;
+}

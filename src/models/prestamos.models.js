@@ -86,6 +86,14 @@ export const devolverPrestamo = async (idPrestamo) => {
     return { success: false, mensaje: result[0].message };
 }
 
+export const renovarPrestamo = async (idPrestamo, idUsuario) => {
+  const [[result]] = await db.query(`CALL sp_renovar_prestamo(?, ?)`, [idPrestamo, idUsuario]);
+  //PENDIENTE 
+  console.log("RESULTADO SP:", result);
+  if (result[0].success) return { success: true, mensaje: result[0].message };
+  else return { success: false, mensaje: result[0].message };
+}
+
 //Pasar consulta a vista para simplificar el código
 export const getAllPrestamos = async () => {
   const [rows] = await db.query(`

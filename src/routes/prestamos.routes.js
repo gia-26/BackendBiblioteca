@@ -9,5 +9,6 @@ router.get('/', ctrl.getAllPrestamos);
 router.post('/registrar', ctrl.registrarPrestamo);
 router.put('/devolver', ctrl.devolverPrestamo);
 router.get('/ejemplares/buscar', ctrl.getAllEjemplaresByTitulo);
+router.post('/renovar', ctrl.renovarPrestamo);
 
 export default router;

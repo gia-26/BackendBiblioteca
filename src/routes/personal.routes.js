@@ -7,8 +7,10 @@ const router = Router();
 router.get('/', ctrl.getAllPersonal);
 router.get('/tipos-roles', ctrl.getAllTiposRoles);
 router.get('/:id', ctrl.getPersonalById);
+router.get('/generar/id', ctrl.generarIdPersonal); 
 
 //Privadas
 router.put('/editar/password', ctrl.editPasswordUsuario);
+router.put('/eliminar', ctrl.eliminarPersonal);
 
 export default router;
