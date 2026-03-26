@@ -49,3 +49,28 @@ export const editUsuarioPassword = async (idUsuario, passwordHash) => {
     );
     return result.affectedRows > 0;
 };
+
+export const eliminarPersonal = async (idPersonal) => {
+    const [result] = await db.query(
+        'UPDATE tbl_personal SET Estado = 0 WHERE Id_personal = ?',
+        [idPersonal]
+    );
+    return result.affectedRows > 0;
+}
+
+export const guardarPersonal = async (Id_personal, Id_trabajador, Id_rol, Password) => {
+    const [result] = await db.query(
+        'INSERT INTO tbl_personal (Id_personal, Id_trabajador, Password, Id_rol, Estado) VALUES (?, ?, ?, ?, ?)',
+        [Id_personal, Id_trabajador, Password, Id_rol, 1]
+    );
+    return result.insertId;
+}
+
+export const generarIdPersonal = async () => {
+    const [rows] = await db.query(`
+        SELECT MAX(Id_personal) AS maxId FROM tbl_personal;
+    `);
+    const maxId = rows[0].maxId || 0;
+    const nuevoId = maxId + 1;
+    return `PER${nuevoId.toString().padStart(3, '0')}`;
+}
