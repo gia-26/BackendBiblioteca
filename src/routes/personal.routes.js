@@ -13,5 +13,6 @@ router.get('/trabajador/:id', ctrl.getTrabajadorById);
 //Privadas
 router.put('/editar/password', ctrl.editPasswordUsuario);
 router.put('/eliminar', ctrl.eliminarPersonal);
+router.post('/guardar', ctrl.guardarPersonal);
 
 export default router;
