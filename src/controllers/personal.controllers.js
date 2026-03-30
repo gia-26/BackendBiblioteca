@@ -73,6 +73,11 @@ export const guardarPersonal = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios' });
         }
 
+        const trabajador = await personalModel.getTrabajadorById(id_trabajador);
+        if (!trabajador || trabajador.length === 0) return res.status(400).json({ success: false, message: 'El trabajador no existe' });
+        const existeTrabajador = await personalModel.validarIdTrabajador(id_trabajador);
+        if (!existeTrabajador) return res.status(400).json({ success: false, message: 'El trabajador ya está registrado' });
+
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
         
