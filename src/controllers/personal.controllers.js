@@ -66,6 +66,10 @@ export const guardarPersonal = async (req, res) => {
         const Id_personal = req.body.Id_personal;
         const id_rol = req.body.Id_rol;
         const password = req.body.Password;
+        
+        if (!id_trabajador || !Id_personal || !id_rol || !password) {
+            return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios' });
+        }
 
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
