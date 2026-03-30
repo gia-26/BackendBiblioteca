@@ -63,13 +63,12 @@ export const eliminarPersonal = async (req, res) => {
 export const guardarPersonal = async (req, res) => {
     try {
         const id_trabajador = req.body.Id_trabajador;
+        const Id_personal = req.body.Id_personal;
         const id_rol = req.body.Id_rol;
         const password = req.body.Password;
 
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
-        
-        const Id_personal = await personalModel.generarId();
         
         const guardado = await personalModel.guardarPersonal(Id_personal, id_trabajador, id_rol, passwordHash);
         
