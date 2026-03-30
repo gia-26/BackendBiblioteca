@@ -142,10 +142,16 @@ export const getEstadisticasUsuario = async (idUsuario) => {
   };
 };
 
+// historial de prestamos - MODELS
 export const getPrestamosUsuario = async (idUsuario) => {
   const [rows] = await db.query(`
   SELECT 
-    p.*, 
+    p.Id_prestamo,
+    p.Fecha_prestamo AS fechaPrestamo,
+    p.Fecha_devolucion AS fechaDevolucion,
+    p.Fecha_devolucion_real AS fechaDevolucionReal,
+    p.N_renovaciones AS renovaciones,
+    DATEDIFF(p.Fecha_devolucion, p.Fecha_prestamo) AS dias,
     l.Titulo AS titulo,
     a.Nombre AS autor,
     CASE 
@@ -159,6 +165,7 @@ export const getPrestamosUsuario = async (idUsuario) => {
   INNER JOIN tbl_libros l ON e.Id_libro = l.Id_libro
   INNER JOIN tbl_autores a ON l.Id_autor = a.Id_autor
   WHERE p.Id_usuario = ?
+  ORDER BY p.Fecha_prestamo DESC
   `, [idUsuario]);
 
   return rows;
