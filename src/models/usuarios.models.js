@@ -3,7 +3,7 @@ import db from '../config/db.js';
 export const getAllTiposUsuario = async () => {
   const [rows] = await db.query('SELECT Id_tipo_usuario, Tipo_usuario FROM tbl_tipo_usuarios');
   return rows;
-}
+};
 
 export const createUsuario = async (idUsuario, idTipoUsuario, passwordHash) => {
     const [result] = await db.query(

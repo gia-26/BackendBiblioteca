@@ -18,6 +18,24 @@ export const getAllPersonal = async () => {
     return rows;
 }
 
+export const getTrabajadorById = async (id) => {
+    const [rows] = await db.query(`
+        SELECT
+            t.Nombre,
+            t.Apellido_P,
+            t.Apellido_M
+        FROM tbl_trabajadores t WHERE Id_trabajador = ?;
+    `, [id]);
+    return rows;
+}
+
+export const validarIdTrabajador = async (id) => {
+    const [rows] = await db.query(`
+        SELECT * FROM tbl_personal p WHERE p.Id_trabajador = ?;
+    `, [id]);
+    return rows.length > 0;
+}
+
 export const getAllPersonalById = async (id) => {
     const [rows] = await db.query(`
         SELECT

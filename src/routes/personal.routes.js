@@ -7,7 +7,8 @@ const router = Router();
 router.get('/', ctrl.getAllPersonal);
 router.get('/tipos-roles', ctrl.getAllTiposRoles);
 router.get('/:id', ctrl.getPersonalById);
-router.get('/generar/id', ctrl.generarIdPersonal); 
+router.get('/generar/id', ctrl.generarIdPersonal);
+router.get('/trabajador/:id', ctrl.getTrabajadorById);
 
 //Privadas
 router.put('/editar/password', ctrl.editPasswordUsuario);

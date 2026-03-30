@@ -90,3 +90,15 @@ export const generarIdPersonal = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+export const getTrabajadorById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const existeTrabajador = await personalModel.validarIdTrabajador(id);
+        if (!existeTrabajador) return res.status(400).json({ success: false, message: 'El trabajador ya está registrado' });
+        const trabajador = await personalModel.getTrabajadorById(id);
+        res.status(200).json( {success: true, data: trabajador});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
