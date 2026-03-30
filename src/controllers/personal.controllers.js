@@ -34,12 +34,14 @@ export const editPasswordUsuario = async (req, res) => {
     try {
         const Id_personal = req.body.Id_personal;
         const password = req.body.password;
-        if (!Id_personal || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        const Id_rol = req.body.Id_rol;
+
+        if (!Id_personal || !password || !Id_rol) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
 
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
 
-        const updated = await personalModel.editUsuarioPassword(Id_personal, passwordHash);
+        const updated = await personalModel.editUsuario(Id_personal, passwordHash, Id_rol);
         if (!updated) return res.status(404).json({ message: 'Usuario no encontrado' });
 
         res.status(200).json({ success: true, message: 'Contraseña actualizada con éxito' });
