@@ -19,7 +19,7 @@ export const getAllPersonal = async () => {
 }
 
 export const getTrabajadorById = async (id) => {
-    const [rows] = await db.query(`
+    const [[rows]] = await db.query(`
         SELECT
             t.Nombre,
             t.Apellido_P,
