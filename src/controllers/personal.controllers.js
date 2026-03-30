@@ -67,7 +67,7 @@ export const guardarPersonal = async (req, res) => {
         const id_trabajador = req.body.Id_trabajador;
         const Id_personal = req.body.Id_personal;
         const id_rol = req.body.Id_rol;
-        const password = req.body.Password;
+        const password = req.body.password;
         
         if (!id_trabajador || !Id_personal || !id_rol || !password) {
             return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios' });
