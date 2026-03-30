@@ -33,7 +33,7 @@ export const validarIdTrabajador = async (id) => {
     const [rows] = await db.query(`
         SELECT * FROM tbl_personal p WHERE p.Id_trabajador = ?;
     `, [id]);
-    return rows.length > 0;
+    return rows.length <= 0;
 }
 
 export const getAllPersonalById = async (id) => {
