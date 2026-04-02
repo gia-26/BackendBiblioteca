@@ -35,7 +35,7 @@ export const buscarLibros = async (req, res) => {
             return res.status(400).json({ success: false, error: 'Tipo y valor de búsqueda requeridos' });
         }
 
-        let libros;
+        let libros = [];
 
         switch (tipo) {
             case "titulo":
