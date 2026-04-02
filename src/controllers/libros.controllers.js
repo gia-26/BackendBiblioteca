@@ -38,13 +38,13 @@ export const buscarLibros = async (req, res) => {
         let libros;
 
         switch (tipo) {
-            case 'titulo':
+            case "titulo":
                 libros = await librosModel.getAllLibrosByTitulo(valor);
                 break;
-            case 'isbn':
+            case "isbn":
                 libros = await librosModel.getAllLibrosByIsbn(valor);
                 break;
-            case 'id':
+            case "id":
                 libros = await librosModel.getAllLibrosById(valor);
                 break;
             default:
