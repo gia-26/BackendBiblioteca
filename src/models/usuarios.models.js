@@ -48,7 +48,7 @@ export const getAllUsuarios = async () => {
   return rows;
 };
 
-export const getUsuariosById = async ({id, tipo}) => {
+export const getUsuariosById = async (id, tipo) => {
     if (tipo === 'TU001') {
       const [rows] = await db.query(`
         SELECT

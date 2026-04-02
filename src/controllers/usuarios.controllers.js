@@ -26,7 +26,9 @@ export const getUsuariosById = async (req, res) => {
                 error: "Faltan parámetros id o tipo"
             });
         }
-        const usuario = await usuariosModels.getUsuariosById(req.query);
+        const id = req.query.id;
+        const tipo = req.query.tipo;
+        const usuario = await usuariosModels.getUsuariosById(id, tipo);
         res.status(200).json(usuario);
     } catch (error) {
         res.status(500).json({ error: error.message });
