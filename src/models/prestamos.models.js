@@ -210,4 +210,6 @@ export const getAllPrestamosByLibro = async (idLibro) => {
       INNER JOIN tbl_trabajadores trab ON us.Id_usuario = trab.Id_trabajador 
       WHERE us.Id_tipo_usuario = 'TU002' AND estPres.Id_estado_prestamo IN ('EP001','EP003') AND lib.Id_libro LIKE ?;  
   `, [`%${idLibro}%`, `%${idLibro}%`]);
+
+  return rows;
 }
