@@ -74,3 +74,32 @@ export const renovarPrestamo = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 }
+
+export const buscarPrestamos = async (req, res) => {
+  try {
+    const id = req.query.id || '';
+    const tipo = req.query.tipo || '';
+
+    if (!id || !tipo) {
+      res.status(400).json({ error: 'Faltan parámetros de búsqueda' });
+    }
+
+    let prestamos;
+
+    switch (tipo) {
+      case "idUsuario":
+        prestamos = await prestamosModel.getAllPrestamosByUsuario(id);
+        break;
+      case "idLibro":
+        prestamos = await prestamosModel.getAllPrestamosByLibro(id);
+        break;
+      default:
+        res.status(400).json({ error: 'Tipo de búsqueda no válido' });
+    }
+
+    return res.status(200).json(prestamos);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
