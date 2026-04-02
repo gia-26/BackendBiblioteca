@@ -17,7 +17,7 @@ export const getAllLibros = async () => {
 }
 
 export const getAllLibrosById = async (id) => {
-    const [[rows]] = await db.query(`
+    const [rows] = await db.query(`
         SELECT
             lib.Id_libro,
             lib.Titulo,
@@ -33,7 +33,7 @@ export const getAllLibrosById = async (id) => {
 }
 
 export const getAllLibrosByTitulo = async (titulo) => {
-    const [[rows]] = await db.query(`
+    const [rows] = await db.query(`
         SELECT
             lib.Id_libro,
             lib.Titulo,
@@ -49,7 +49,7 @@ export const getAllLibrosByTitulo = async (titulo) => {
 }
 
 export const getAllLibrosByIsbn = async (isbn) => {
-    const [[rows]] = await db.query(`
+    const [rows] = await db.query(`
         SELECT
             lib.Id_libro,
             lib.Titulo,
