@@ -16,6 +16,54 @@ export const getAllLibros = async () => {
     return rows;
 }
 
+export const getAllLibrosById = async (id) => {
+    const [rows] = await db.query(`
+        SELECT
+            lib.Id_libro,
+            lib.Titulo,
+            a.Nombre AS 'Autor',
+            g.Nombre AS 'Genero',
+            lib.Imagen
+        FROM tbl_libros lib
+        INNER JOIN tbl_autores a ON lib.Id_autor = a.Id_autor
+        INNER JOIN tbl_generos g ON lib.Id_genero = g.Id_genero
+        WHERE lib.Estado != 0 AND lib.Id_libro LIKE ?;
+    `, [`${id}%`]);
+    return rows;
+}
+
+export const getAllLibrosByTitulo = async (titulo) => {
+    const [rows] = await db.query(`
+        SELECT
+            lib.Id_libro,
+            lib.Titulo,
+            a.Nombre AS 'Autor',
+            g.Nombre AS 'Genero',
+            lib.Imagen
+        FROM tbl_libros lib
+        INNER JOIN tbl_autores a ON lib.Id_autor = a.Id_autor
+        INNER JOIN tbl_generos g ON lib.Id_genero = g.Id_genero
+        WHERE lib.Estado != 0 AND lib.Titulo LIKE ?;
+    `, [`%${titulo}%`]);
+    return rows;
+}
+
+export const getAllLibrosByIsbn = async (isbn) => {
+    const [rows] = await db.query(`
+        SELECT
+            lib.Id_libro,
+            lib.Titulo,
+            a.Nombre AS 'Autor',
+            g.Nombre AS 'Genero',
+            lib.Imagen
+        FROM tbl_libros lib
+        INNER JOIN tbl_autores a ON lib.Id_autor = a.Id_autor
+        INNER JOIN tbl_generos g ON lib.Id_genero = g.Id_genero
+        WHERE lib.Estado != 0 AND lib.ISBN LIKE ?;
+    `, [`%${isbn}%`]);
+    return rows;
+}
+
 export const eliminarLibro = async (idLibro) => {
     await db.query(`
         UPDATE tbl_libros

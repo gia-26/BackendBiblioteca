@@ -26,6 +26,38 @@ export const eliminarLibro = async (req, res) => {
     }
 }
 
+export const buscarLibros = async (req, res) => {
+    try {
+        const tipo = req.query.tipo;
+        const valor = req.query.valor;
+
+        if (!tipo || !valor) {
+            return res.status(400).json({ success: false, error: 'Tipo y valor de búsqueda requeridos' });
+        }
+
+        let libros;
+
+        switch (tipo) {
+            case 'titulo':
+                libros = await librosModel.getAllLibrosByTitulo(valor);
+                break;
+            case 'isbn':
+                libros = await librosModel.getAllLibrosByIsbn(valor);
+                break;
+            case 'id':
+                libros = await librosModel.getAllLibrosById(valor);
+                break;
+            default:
+                res.status(400).json({ success: false, error: 'Tipo de búsqueda no válido' });
+        }
+
+        res.status(200).json({ success: true, data: libros });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
 export const getAllLibros = async (req, res) => {
     try {
         const libros = await librosModel.getAllLibros();
