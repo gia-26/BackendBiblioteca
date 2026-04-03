@@ -50,7 +50,7 @@ app.use('/api/catalogo', catalogoRoutes);
 app.use('/api/libros', librosRoutes);
 app.use('/api/personal', personalRoutes);
 app.use('/api/informacion_biblioteca', bibliotecaRoutes);
-app.use("/api/generos", generosRoutes);
+app.use('/api/generos', generosRoutes);
 app.use('/api/anios', aniosRoutes);
 app.use('/api/areas', areasRoutes);
 app.use('/api/editoriales', editorialesRoutes);

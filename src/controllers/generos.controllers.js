@@ -14,6 +14,12 @@ export const getAllGeneros = async (req, res) => {
 export const agregarGenero = async (req, res) => {
     try {
         const { Nombre } = req.body;
+
+        //VALIDACIÓN PARA LA PRUEBA PU-04
+        if (!Nombre || Nombre.trim() === "") {
+          return res.status(400).json({ error: "El nombre del género no puede estar vacío" });
+        }
+
         const result = await generosModels.createGenero(Nombre);
         res.status(201).json(result);
     } catch (error) {
