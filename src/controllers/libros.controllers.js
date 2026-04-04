@@ -116,6 +116,10 @@ export const agregarLibro = async (req, res) => {
         if (!titulo || !isbn || !edicion || !anioEdicion || !areaConocimiento || !generoPrincipal || !autorPrincipal || !editorialPrincipal || !sinopsis || !noEjemplares || !urlImagen) {
             return res.status(400).json({ success: false, error: 'Faltan campos obligatorios' });
         }
+
+        if (await librosModel.validarISBN(isbn)) {
+            return res.status(400).json({ success: false, error: 'El ISBN ya existe' });
+        }
         
         const id = await librosModel.agregarLibro({
             Id_libro: nuevoId,
@@ -191,6 +195,10 @@ export const editarLibro = async (req, res) => {
 
         if (!idLibro || !titulo || !isbn || !edicion || !anioEdicion || !areaConocimiento || !generoPrincipal || !autorPrincipal || !editorialPrincipal || !sinopsis || !urlImagen) {
             return res.status(400).json({ success: false, error: 'Faltan campos obligatorios' });
+        }
+
+        if (await librosModel.validarISBN(isbn)) {
+            return res.status(400).json({ success: false, error: 'El ISBN ya existe' });
         }
 
         const libroEditado = await librosModel.editarLibro({

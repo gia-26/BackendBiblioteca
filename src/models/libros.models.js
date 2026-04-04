@@ -231,3 +231,11 @@ export const agregarEditorialSecundaria = async (idLibro, idEditorial) => {
         VALUES (?, ?);
     `, [idEditorial, idLibro]);
 }
+
+export const validarISBN = async (isbn) => {
+    const [rows] = await db.query(`
+        SELECT COUNT(*) AS count FROM tbl_libros
+        WHERE ISBN = ? AND Estado != 0;
+    `, [isbn]);
+    return rows[0].count > 0;
+}
