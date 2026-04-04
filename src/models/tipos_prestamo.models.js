@@ -37,6 +37,17 @@ export const updateTipoPrestamo = async (id, tipoPrestamo) => {
 };
 
 export const deleteTipoPrestamo = async (id) => {
+    const [prestamos] = await db.query(
+        'SELECT COUNT(*) as total FROM tbl_prestamos WHERE Id_tipo_prestamo = ?',
+        [id]
+    );
+    if (prestamos[0].total > 0) {
+        return {
+            deleted: false,
+            error: true,
+            message: `No se puede eliminar: existen ${prestamos[0].total} préstamo(s) asociados a este tipo.`
+        };
+    }
     await db.query(
         'DELETE FROM tbl_tipos_prestamos WHERE Id_tipo_prestamo = ?',
         [id]
