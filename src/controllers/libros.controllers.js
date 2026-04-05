@@ -197,9 +197,6 @@ export const editarLibro = async (req, res) => {
             return res.status(400).json({ success: false, error: 'Faltan campos obligatorios' });
         }
 
-        if (await librosModel.validarISBN(isbn)) {
-            return res.status(400).json({ success: false, error: 'El ISBN ya existe' });
-        }
 
         const libroEditado = await librosModel.editarLibro({
             Id_libro: idLibro,
