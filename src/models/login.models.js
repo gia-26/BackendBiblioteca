@@ -34,7 +34,7 @@ export const findUsuarioById = async (idUsuario, sesion) => {
         p.Password AS 'password_hash'
       FROM tbl_personal p
       INNER JOIN tbl_trabajadores t ON t.Id_trabajador = p.Id_trabajador
-      WHERE p.Id_personal = ?;
+      WHERE p.Id_personal = ? AND p.Estado != 0;
     `, [idUsuario]);
   }
   return rows[0] || null;
