@@ -10,7 +10,9 @@ export const login = async (req, res) => {
 
         const usuario = await loginModels.findUsuarioById(idUsuario, sesion);
         if (!usuario) return res.status(401).json({ message: 'Credenciales inválidas' });
-        if (usuario.rol !== sesion) return res.status(403).json({ message: 'Credenciales inválidas' });
+        if (sesion !== 'Miembro') {
+            if (usuario.rol !== sesion) return res.status(403).json({ message: 'Credenciales inválidas' });
+        }
 
         const esValida = await bcrypt.compare(password, usuario.password_hash);
         if (!esValida) return res.status(401).json({ message: 'Credenciales inválidas' });
